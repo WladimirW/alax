@@ -40,16 +40,14 @@ int _tmain(int argc, _TCHAR* argv[])
 
 		CComPtr<IMFMediaType> pMediaTypeIn;
 		__C(MFCreateMediaType(&pMediaTypeIn)); 
-
 		__C(pMediaTypeIn->SetGUID(MF_MT_MAJOR_TYPE, MFMediaType_Audio));   
 		__C(pMediaTypeIn->SetGUID(MF_MT_SUBTYPE, MFAudioFormat_PCM));
-
 		__C(pMediaTypeIn->SetUINT32(MF_MT_AUDIO_NUM_CHANNELS, 2));
 		__C(pMediaTypeIn->SetUINT32(MF_MT_AUDIO_SAMPLES_PER_SECOND, 44100));
 		//__C(pMediaTypeIn->SetUINT32(MF_MT_AUDIO_BLOCK_ALIGNMENT, 4));
 		//__C(pMediaTypeIn->SetUINT32(MF_MT_AUDIO_AVG_BYTES_PER_SECOND, 44100 * 4));
 		__C(pMediaTypeIn->SetUINT32(MF_MT_AUDIO_BITS_PER_SAMPLE, 16));
-		__C(pMediaTypeIn->SetUINT32(MF_MT_ALL_SAMPLES_INDEPENDENT, 1));
+		//__C(pMediaTypeIn->SetUINT32(MF_MT_ALL_SAMPLES_INDEPENDENT, 1));
 
 		__C(pSinkWriter->SetInputMediaType(streamIndex, pMediaTypeIn, NULL));   
 		__C(pSinkWriter->BeginWriting());
