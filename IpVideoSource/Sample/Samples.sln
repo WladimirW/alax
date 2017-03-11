@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+# Visual Studio 2015
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PlayJpegLocation", "PlayJpegLocation\PlayJpegLocation.vcxproj", "{235E8D0F-E886-4ED1-810C-13407162C811}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlayJpegLocationSharp", ".NET\PlayJpegLocationSharp\PlayJpegLocationSharp.csproj", "{9FCD5193-5A19-496F-A29B-57F32892B1FF}"
