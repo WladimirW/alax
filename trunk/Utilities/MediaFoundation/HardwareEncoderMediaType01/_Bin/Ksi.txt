@@ -1,0 +1,76 @@
+Friendly Name: Intel® Quick Sync Video H.264 Encoder MFT
+
+MF_MT_MPEG_SEQUENCE_HEADER: 0x0
+Output NAL Unit Type 9, Size 6, Data 00 00 00 01 09 10
+Output NAL Unit Type 7, Size 40, Data 00 00 00 01 27 64 00 20 AC 2B 60 28 02 DD 80 88 00 00 1F 48 00 0E A6 07 02 00 00 9C 40 00 00 27...
+Output NAL Unit Type 8, Size 8, Data 00 00 00 01 28 EE 3C B0
+Output NAL Unit Type 6, Size 26, Data 00 00 00 01 06 00 07 80 AF C8 00 AF C8 40 01 07 00 00 03 00 00 03 00 00 04 80
+Output NAL Unit Type 5, Size 256, Data 00 00 01 25 88 80 4F DE 08 E4 74 03 AD FF C1 75 CD 04 C4 F5 B7 B4 1F D5 2A BE 3D 1B 15 BB 53 0C...
+
+MF_MT_MPEG_SEQUENCE_HEADER: 0x0
+Output NAL Unit Type 9, Size 6, Data 00 00 00 01 09 10
+Output NAL Unit Type 7, Size 40, Data 00 00 00 01 27 64 00 20 AC 2B 60 28 02 DD 80 88 00 00 1F 48 00 0E A6 07 02 00 00 9C 40 00 00 27...
+Output NAL Unit Type 8, Size 8, Data 00 00 00 01 28 EE 3C B0
+Output NAL Unit Type 6, Size 26, Data 00 00 00 01 06 00 07 80 AF C8 00 AF C8 40 01 07 00 00 03 00 00 03 00 00 04 80
+Output NAL Unit Type 5, Size 256, Data 00 00 01 25 88 80 4F DE 08 E4 74 03 AD FF C1 75 CD 04 C4 F5 B7 B4 1F D5 2A BE 3D 1B 15 BB 53 0C...
+
+Adapter Description: NVIDIA GeForce GTX 750
+
+Exception: The parameter is incorrect (0x80070057)
+
+Exception: The parameter is incorrect (0x80070057)
+
+Adapter Description: Intel(R) HD Graphics 4600
+
+Exception: Unspecified error (0x80004005)
+
+MF_MT_MPEG_SEQUENCE_HEADER: 0x0
+Output NAL Unit Type 9, Size 6, Data 00 00 00 01 09 10
+Output NAL Unit Type 7, Size 40, Data 00 00 00 01 27 64 00 20 AC 2B 60 28 02 DD 80 88 00 00 1F 48 00 0E A6 07 02 00 00 9C 40 00 00 27...
+Output NAL Unit Type 8, Size 8, Data 00 00 00 01 28 EE 3C B0
+Output NAL Unit Type 6, Size 26, Data 00 00 00 01 06 00 07 80 AF C8 00 AF C8 40 01 07 00 00 03 00 00 03 00 00 04 80
+Output NAL Unit Type 5, Size 256, Data 00 00 01 25 88 80 4F DE 08 E4 74 03 AD FF C1 75 CD 04 C4 F5 B7 B4 1F D5 2A BE 3D 1B 15 BB 53 0C...
+
+Adapter Description: Microsoft Basic Render Driver
+
+Friendly Name: NVIDIA H.264 Encoder MFT
+
+MF_MT_MPEG_SEQUENCE_HEADER: MF_ATTRIBUTE_BLOB
+Media Type NAL Unit Type 7, Size 27, Data 00 00 00 01 67 4D 40 20 95 A0 14 01 6E C0 44 00 00 0F A4 00 07 53 00 3C 70 CA 80
+Media Type NAL Unit Type 8, Size 8, Data 00 00 00 01 68 EE 3C 80
+Output NAL Unit Type 9, Size 6, Data 00 00 00 01 09 10
+Output NAL Unit Type 7, Size 27, Data 00 00 00 01 67 4D 40 20 95 A0 14 01 6E C0 44 00 00 0F A4 00 07 53 00 3C 70 CA 80
+Output NAL Unit Type 8, Size 8, Data 00 00 00 01 68 EE 3C 80
+Output NAL Unit Type 5, Size 213, Data 00 00 00 01 65 B8 04 08 7F 00 6A 40 FF FF 89 95 49 95 67 EC E9 FB 8B 4B 8F C1 29 02 F5 35 D0 00...
+
+MF_MT_MPEG_SEQUENCE_HEADER: MF_ATTRIBUTE_BLOB
+Media Type NAL Unit Type 7, Size 27, Data 00 00 00 01 67 4D 40 20 95 A0 14 01 6E C0 44 00 00 0F A4 00 07 53 00 3C 70 CA 80
+Media Type NAL Unit Type 8, Size 8, Data 00 00 00 01 68 EE 3C 80
+Output NAL Unit Type 9, Size 6, Data 00 00 00 01 09 10
+Output NAL Unit Type 7, Size 27, Data 00 00 00 01 67 4D 40 20 95 A0 14 01 6E C0 44 00 00 0F A4 00 07 53 00 3C 70 CA 80
+Output NAL Unit Type 8, Size 8, Data 00 00 00 01 68 EE 3C 80
+Output NAL Unit Type 5, Size 213, Data 00 00 00 01 65 B8 04 08 7F 00 6A 40 FF FF 89 95 49 95 67 EC E9 FB 8B 4B 8F C1 29 02 F5 35 D0 00...
+
+Adapter Description: NVIDIA GeForce GTX 750
+
+MF_MT_MPEG_SEQUENCE_HEADER: MF_ATTRIBUTE_BLOB
+Media Type NAL Unit Type 7, Size 27, Data 00 00 00 01 67 4D 40 20 95 A0 14 01 6E C0 44 00 00 0F A4 00 07 53 00 3C 70 CA 80
+Media Type NAL Unit Type 8, Size 8, Data 00 00 00 01 68 EE 3C 80
+Exception: The callee is currently not accepting further input (0xC00D36B5; MF_E_NOTACCEPTING)
+
+MF_MT_MPEG_SEQUENCE_HEADER: MF_ATTRIBUTE_BLOB
+Media Type NAL Unit Type 7, Size 27, Data 00 00 00 01 67 4D 40 20 95 A0 14 01 6E C0 44 00 00 0F A4 00 07 53 00 3C 70 CA 80
+Media Type NAL Unit Type 8, Size 8, Data 00 00 00 01 68 EE 3C 80
+Output NAL Unit Type 9, Size 6, Data 00 00 00 01 09 10
+Output NAL Unit Type 7, Size 27, Data 00 00 00 01 67 4D 40 20 95 A0 14 01 6E C0 44 00 00 0F A4 00 07 53 00 3C 70 CA 80
+Output NAL Unit Type 8, Size 8, Data 00 00 00 01 68 EE 3C 80
+Output NAL Unit Type 5, Size 213, Data 00 00 00 01 65 B8 04 08 7F 00 6A 40 FF FF 89 95 49 95 67 EC E9 FB 8B 4B 8F C1 29 02 F5 35 D0 00...
+
+Adapter Description: Intel(R) HD Graphics 4600
+
+Exception: The input type is not supported for D3D device (0xC00D6D76; MF_E_UNSUPPORTED_D3D_TYPE)
+
+Exception: The input type is not supported for D3D device (0xC00D6D76; MF_E_UNSUPPORTED_D3D_TYPE)
+
+Adapter Description: Microsoft Basic Render Driver
+
