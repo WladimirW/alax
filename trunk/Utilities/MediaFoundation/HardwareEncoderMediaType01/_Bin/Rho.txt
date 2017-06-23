@@ -1,0 +1,29 @@
+Friendly Name: Intel® Quick Sync Video H.264 Encoder MFT
+
+MF_MT_MPEG_SEQUENCE_HEADER: 0x0
+Output NAL Unit Type 9, Size 6, Data 00 00 00 01 09 10
+Output NAL Unit Type 7, Size 40, Data 00 00 00 01 27 64 00 20 AC 2B 40 28 02 DD 80 88 00 00 1F 48 00 0E A6 07 02 00 00 9C 40 00 00 27...
+Output NAL Unit Type 8, Size 8, Data 00 00 00 01 28 EE 3C B0
+Output NAL Unit Type 6, Size 26, Data 00 00 00 01 06 00 07 80 AF C8 00 AF C8 40 01 07 00 00 03 00 00 03 00 00 04 80
+Output NAL Unit Type 5, Size 216, Data 00 00 01 25 88 80 4F DE 08 E4 74 00 81 CF F8 2E F9 1F A6 27 B2 63 D0 40 B9 0B 5F 1E 8D 8A DD A9...
+
+MF_MT_MPEG_SEQUENCE_HEADER: 0x0
+Output NAL Unit Type 9, Size 6, Data 00 00 00 01 09 10
+Output NAL Unit Type 7, Size 40, Data 00 00 00 01 27 64 00 20 AC 2B 40 28 02 DD 80 88 00 00 1F 48 00 0E A6 07 02 00 00 9C 40 00 00 27...
+Output NAL Unit Type 8, Size 8, Data 00 00 00 01 28 EE 3C B0
+Output NAL Unit Type 6, Size 26, Data 00 00 00 01 06 00 07 80 AF C8 00 AF C8 40 01 07 00 00 03 00 00 03 00 00 04 80
+Output NAL Unit Type 5, Size 216, Data 00 00 01 25 88 80 4F DE 08 E4 74 00 81 CF F8 2E F9 1F A6 27 B2 63 D0 40 B9 0B 5F 1E 8D 8A DD A9...
+
+Adapter Description: Intel(R) Iris(TM) Graphics 540
+
+Exception: Unspecified error (0x80004005)
+
+MF_MT_MPEG_SEQUENCE_HEADER: 0x0
+Output NAL Unit Type 9, Size 6, Data 00 00 00 01 09 10
+Output NAL Unit Type 7, Size 40, Data 00 00 00 01 27 64 00 20 AC 2B 40 28 02 DD 80 88 00 00 1F 48 00 0E A6 07 02 00 00 9C 40 00 00 27...
+Output NAL Unit Type 8, Size 8, Data 00 00 00 01 28 EE 3C B0
+Output NAL Unit Type 6, Size 26, Data 00 00 00 01 06 00 07 80 AF C8 00 AF C8 40 01 07 00 00 03 00 00 03 00 00 04 80
+Output NAL Unit Type 5, Size 216, Data 00 00 01 25 88 80 4F DE 08 E4 74 00 81 CF F8 2E F9 1F A6 27 B2 63 D0 40 B9 0B 5F 1E 8D 8A DD A9...
+
+Adapter Description: Microsoft Basic Render Driver
+
