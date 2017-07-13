@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////
-// Copyright (C) Roman Ryltsov, 2015
+// Copyright (C) Roman Ryltsov, 2015-2017
 // Created by Roman Ryltsov roman@alax.info
 //
 // A permission to use the source code is granted as long as reference to 
@@ -12,4 +12,5 @@
 // If you wish to build your application for a previous Windows platform, include WinSDKVer.h and
 // set the _WIN32_WINNT macro to the platform you wish to support before including SDKDDKVer.h.
 
-#include <SDKDDKVer.h>
+#include <winsdkver.h>
+#include <sdkddkver.h>
