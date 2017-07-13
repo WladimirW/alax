@@ -21,8 +21,8 @@ namespace RegisterSources
         {
             VideoSourceFilterRegistry registry = new VideoSourceFilterRegistry();
             UnregisterAll(registry);
-            //int width = 1920, height = 1080;
-            int width = 640, height = 480;
+            int width = 1920, height = 1080;
+            //int width = 640, height = 480;
             VideoSourceFilter filter = new VideoSourceFilter();
             filter.Live = true;
             filter.SetMediaType(
