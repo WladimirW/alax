@@ -5,6 +5,7 @@
 #pragma once
 
 #include "rodshow.h"
+#include "romf.h"
 #include <mmdeviceapi.h>
 #include <mmreg.h>
 #include <functiondiscoverykeys.h>
@@ -42,7 +43,11 @@ BEGIN_DLGRESIZE_MAP(CMainDialog)
 END_DLGRESIZE_MAP()
 
 private:
+	CDpiAwareness m_DpiAwareness;
+	CFont m_TextFont;
 	CRoEdit m_TextEdit;
+	CFont m_ButtonFont;
+	CButton m_CloseButton;
 
 public:
 // CMainDialog
@@ -63,18 +68,71 @@ public:
 			return TRUE;
 		return FALSE;
 	}
+	static VOID FormatWaveFormatEx(const WAVEFORMATEX* pWaveFormatEx, SIZE_T nWaveFormatExSize, CRoArrayT<CString>& Array)
+	{
+		_A(nWaveFormatExSize >= sizeof (WAVEFORMATEX));
+		Array.Add(AtlFormatString(_T("wFormatTag 0x%02X"), pWaveFormatEx->wFormatTag));
+		Array.Add(AtlFormatString(_T("nChannels %d"), pWaveFormatEx->nChannels));
+		Array.Add(AtlFormatString(_T("nSamplesPerSec %d"), pWaveFormatEx->nSamplesPerSec));
+		Array.Add(AtlFormatString(_T("nAvgBytesPerSec %d"), pWaveFormatEx->nAvgBytesPerSec));
+		Array.Add(AtlFormatString(_T("nBlockAlign %d"), pWaveFormatEx->nBlockAlign));
+		Array.Add(AtlFormatString(_T("wBitsPerSample %d"), pWaveFormatEx->wBitsPerSample));
+		Array.Add(AtlFormatString(_T("cbSize %d"), pWaveFormatEx->cbSize));
+		if(nWaveFormatExSize < sizeof (WAVEFORMATEXTENSIBLE) || pWaveFormatEx->wFormatTag != WAVE_FORMAT_EXTENSIBLE)
+			return;
+		const WAVEFORMATEXTENSIBLE* pWaveFormatExtensible = (const WAVEFORMATEXTENSIBLE*) pWaveFormatEx;
+		Array.Add(AtlFormatString(_T("wValidBitsPerSample %d"), pWaveFormatExtensible->Samples.wValidBitsPerSample));
+		Array.Add(AtlFormatString(_T("dwChannelMask 0x%02X"), pWaveFormatExtensible->dwChannelMask));
+		Array.Add(AtlFormatString(_T("SubFormat %ls"), _PersistHelper::StringFromIdentifier(pWaveFormatExtensible->SubFormat)));
+	}
 
 // Window Message Handler
 	LRESULT OnInitDialog(HWND, LPARAM)
 	{
-		SetIcon(AtlLoadIcon(IDI_MODULE), TRUE);
+		DlgResize_Init();
+		SetIcon(AtlLoadIconImage(IDI_MODULE, LR_DEFAULTCOLOR, GetSystemMetrics(SM_CXICON), GetSystemMetrics(SM_CYICON)), TRUE);
 		SetIcon(AtlLoadIconImage(IDI_MODULE, LR_DEFAULTCOLOR, GetSystemMetrics(SM_CXSMICON), GetSystemMetrics(SM_CYSMICON)), FALSE);
 		CMenuHandle Menu = GetSystemMenu(FALSE);
 		_W(Menu.AppendMenu(MF_SEPARATOR));
 		_W(Menu.AppendMenu(MF_STRING, ID_APP_ABOUT, _T("&About...")));
-		DlgResize_Init();
 		CAboutDialog::UpdateCaption(*this);
+		m_TextEdit = GetDlgItem(IDC_TEXT);
+		m_TextFont = m_DpiAwareness.ScaleFont(m_TextEdit.GetFont(), 11);
+		m_TextEdit.SetFont(m_TextFont);
+		m_CloseButton = GetDlgItem(IDOK);
+		m_ButtonFont = m_DpiAwareness.ScaleFont(GetFont(), 9);
+		m_CloseButton.SetFont(m_ButtonFont);
+		#pragma region Position
+		{
+			CRect Position;
+			_W(GetWindowRect(Position));
+			const HMONITOR hMonitor = MonitorFromPoint(Position.CenterPoint(), MONITOR_DEFAULTTONEAREST);
+			MONITORINFO Information = { sizeof Information };
+			if(GetMonitorInfo(hMonitor, &Information))
+			{
+				CSize DefaultExtent = reinterpret_cast<const CRect&>(Information.rcWork).Size();
+				DefaultExtent.cx = DefaultExtent.cx * 6 / 8;
+				DefaultExtent.cy = DefaultExtent.cy * 6 / 8;
+				BOOL bUpdate = FALSE;
+				CSize ExcessExtent(DefaultExtent.cx - Position.Width(), DefaultExtent.cy - Position.Height());
+				if(ExcessExtent.cx > 0)
+				{
+					Position.left -= ExcessExtent.cx / 2;
+					Position.right = Position.left + DefaultExtent.cx;
+					bUpdate = TRUE;
+				}
+				if(ExcessExtent.cy > 0)
+				{
+					Position.top -= ExcessExtent.cy / 2;
+					Position.bottom = Position.top + DefaultExtent.cy;
+					bUpdate = TRUE;
+				}
+				if(bUpdate)
+					_W(MoveWindow(Position, FALSE));
+			}
+		}
 		_W(CenterWindow());
+		#pragma endregion
 		_ATLTRY
 		{
 			CWaitCursor WaitCursor;
@@ -1300,22 +1358,8 @@ public:
 									} else
 									if(IsWaveFormatExKey(Key) && Value.vt == VT_BLOB && Value.blob.cbSize >= sizeof (WAVEFORMATEX))
 									{
-										const WAVEFORMATEX* pWaveFormatEx = (const WAVEFORMATEX*) Value.blob.pBlobData;
 										CRoArrayT<CString> Array;
-										Array.Add(AtlFormatString(_T("wFormatTag 0x%02X"), pWaveFormatEx->wFormatTag));
-										Array.Add(AtlFormatString(_T("nChannels %d"), pWaveFormatEx->nChannels));
-										Array.Add(AtlFormatString(_T("nSamplesPerSec %d"), pWaveFormatEx->nSamplesPerSec));
-										Array.Add(AtlFormatString(_T("nAvgBytesPerSec %d"), pWaveFormatEx->nAvgBytesPerSec));
-										Array.Add(AtlFormatString(_T("nBlockAlign %d"), pWaveFormatEx->nBlockAlign));
-										Array.Add(AtlFormatString(_T("wBitsPerSample %d"), pWaveFormatEx->wBitsPerSample));
-										Array.Add(AtlFormatString(_T("cbSize %d"), pWaveFormatEx->cbSize));
-										if(Value.blob.cbSize >= sizeof (WAVEFORMATEXTENSIBLE) && pWaveFormatEx->wFormatTag == WAVE_FORMAT_EXTENSIBLE)
-										{
-											const WAVEFORMATEXTENSIBLE* pWaveFormatExtensible = (const WAVEFORMATEXTENSIBLE*) pWaveFormatEx;
-											Array.Add(AtlFormatString(_T("wValidBitsPerSample %d"), pWaveFormatExtensible->Samples.wValidBitsPerSample));
-											Array.Add(AtlFormatString(_T("dwChannelMask 0x%02X"), pWaveFormatExtensible->dwChannelMask));
-											Array.Add(AtlFormatString(_T("SubFormat %ls"), _PersistHelper::StringFromIdentifier(pWaveFormatExtensible->SubFormat)));
-										}
+										FormatWaveFormatEx((const WAVEFORMATEX*) Value.blob.pBlobData, Value.blob.cbSize, Array);
 										sDetail = _StringHelper::Join(Array, _T("; "));
 									}
 									#pragma endregion
@@ -1410,7 +1454,27 @@ public:
 						{
 							CComPtr<IUnknown> pUnknown;
 							const HRESULT nActivateResult = pMmDevice->Activate(Item.Value, CLSCTX_ALL, NULL, (VOID**) &pUnknown);
-							sText.AppendFormat(_T("\t") _T("\t") _T("%hs") _T("\t") _T("0x%08X") _T("\r\n"), Item.pszName, nActivateResult);
+							CRoArrayT<CString> ArrayA;
+							ArrayA.Add(CString(Item.pszName));
+							ArrayA.Add(MF::FormatResult(nActivateResult));
+							sText.AppendFormat(_T("\t") _T("\t") _T("%s") _T("\r\n"), _StringHelper::Join(ArrayA, _T("\t")));
+							if(FAILED(nActivateResult))
+								continue;
+							if(Item.Value == __uuidof(IAudioClient))
+							{
+								const CComPtr<IAudioClient>& pAudioClient = reinterpret_cast<const CComPtr<IAudioClient>&>(pUnknown);
+								WAVEFORMATEX* pWaveFormatEx;
+								if(SUCCEEDED(pAudioClient->GetMixFormat(&pWaveFormatEx)))
+								{
+									ArrayA.RemoveAll();
+									ArrayA.Add(_T("Mix Format"));
+									CRoArrayT<CString> ArrayB;
+									FormatWaveFormatEx(pWaveFormatEx, sizeof *pWaveFormatEx + pWaveFormatEx->cbSize, ArrayB);
+									ArrayA.Add(_StringHelper::Join(ArrayB, _T("; ")));
+									sText.AppendFormat(_T("\t") _T("\t") _T("\t") _T("%s") _T("\r\n"), _StringHelper::Join(ArrayA, _T("\t")));
+								}
+								// SUGG: Try explicitly well known formats like mono, stereo, 5.1, 7.1 at 48000 Hz, 16-bit, 24-bit and 32-bit IEEE float
+							}
 						}
 						#pragma endregion 
 					}
@@ -1426,7 +1490,6 @@ public:
 				sText.AppendFormat(_T("Error 0x%08X\r\n"), (HRESULT) Exception);
 			}
 			#pragma endregion 
-			m_TextEdit = GetDlgItem(IDC_TEXT);
 			m_TextEdit.SetValue(sText);
 		}
 		_ATLCATCHALL()

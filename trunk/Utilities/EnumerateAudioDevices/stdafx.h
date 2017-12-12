@@ -7,7 +7,8 @@
 ////////////////////////////////////////////////////////////
 // Windows definitions
 
-#include <SDKDDKVer.h>
+#include <winsdkver.h>
+#include <sdkddkver.h>
 
 #define INLINE_HRESULT_FROM_WIN32
 #define _INC_WINDOWSX

@@ -21,6 +21,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{1AB74749-013C-4258-8B40-CB8B2E44F2B7}</ProjectGuid>
     <RootNamespace>EnumerateAudioDevices</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
@@ -28,24 +29,24 @@
     <UseOfAtl>Static</UseOfAtl>
     <CharacterSet>Unicode</CharacterSet>
     <WholeProgramOptimization>true</WholeProgramOptimization>
-    <PlatformToolset>v120_xp</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <CharacterSet>Unicode</CharacterSet>
-    <PlatformToolset>v120_xp</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseOfAtl>Static</UseOfAtl>
     <CharacterSet>Unicode</CharacterSet>
     <WholeProgramOptimization>true</WholeProgramOptimization>
-    <PlatformToolset>v120_xp</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <CharacterSet>Unicode</CharacterSet>
-    <PlatformToolset>v120_xp</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -100,6 +101,14 @@
     <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(WindowsSdkDir)lib\x64;$(LibraryPath)</LibraryPath>
     <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(WindowsSdkDir)lib\x64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <PostBuildEventUseInBuild>false</PostBuildEventUseInBuild>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <PostBuildEventUseInBuild>false</PostBuildEventUseInBuild>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" />
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Midl>
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -139,11 +148,13 @@
       <DataExecutionPrevention>
       </DataExecutionPrevention>
       <TargetMachine>MachineX86</TargetMachine>
-      <UACExecutionLevel>RequireAdministrator</UACExecutionLevel>
     </Link>
     <PostBuildEvent>
-      <Message>Performing registration...</Message>
-      <Command>"$(TargetPath)" /RegServer</Command>
+      <Message>COM Registration, Build Increment, Digital Signature</Message>
+      <Command>rem "$(TargetPath)" /RegServer
+"$(AlaxInfo_Common)\..\Utilities\IncrementBuild\_Bin\IncrementBuild-$(PlatformName).exe" configuration "$(ProjectDir)Module.ini" binary "$(TargetPath)" string "ConfigurationName" "$(ConfigurationName)" 
+"$(WindowsSdkDir)bin\x64\signtool" sign /v /f "$(AlaxInfo_Common)\Certificate\PrivateSPC.pfx" /d "Alax.Info $(ProjectName) Application" /du http://alax.info /n "Roman Ryltsov" "$(TargetPath)"
+</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -187,8 +198,11 @@
       <TargetMachine>MachineX64</TargetMachine>
     </Link>
     <PostBuildEvent>
-      <Message>Performing registration...</Message>
-      <Command>"$(TargetPath)" /RegServer</Command>
+      <Message>COM Registration, Build Increment, Digital Signature</Message>
+      <Command>rem "$(TargetPath)" /RegServer
+"$(AlaxInfo_Common)\..\Utilities\IncrementBuild\_Bin\IncrementBuild-$(PlatformName).exe" configuration "$(ProjectDir)Module.ini" binary "$(TargetPath)" string "ConfigurationName" "$(ConfigurationName)" 
+"$(WindowsSdkDir)bin\x64\signtool" sign /v /f "$(AlaxInfo_Common)\Certificate\PrivateSPC.pfx" /d "Alax.Info $(ProjectName) Application" /du http://alax.info /n "Roman Ryltsov" "$(TargetPath)"
+</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -237,12 +251,20 @@
       <DataExecutionPrevention>
       </DataExecutionPrevention>
       <TargetMachine>MachineX86</TargetMachine>
-      <UACExecutionLevel>RequireAdministrator</UACExecutionLevel>
     </Link>
     <PostBuildEvent>
-      <Message>Performing registration...</Message>
-      <Command>"$(TargetPath)" /RegServer</Command>
+      <Message>COM Registration, Build Increment, Digital Signature</Message>
+      <Command>rem "$(TargetPath)" /RegServer
+"$(AlaxInfo_Common)\..\Utilities\IncrementBuild\_Bin\IncrementBuild-$(PlatformName).exe" configuration "$(ProjectDir)Module.ini" binary "$(TargetPath)" string "ConfigurationName" "$(ConfigurationName)" 
+"$(WindowsSdkDir)bin\x64\signtool" sign /v /f "$(AlaxInfo_Common)\Certificate\PrivateSPC.pfx" /d "Alax.Info $(ProjectName) Application" /du http://alax.info /n "Roman Ryltsov" "$(TargetPath)"
+</Command>
     </PostBuildEvent>
+    <Manifest>
+      <OutputManifestFile>$(IntDir)$(TargetName)$(TargetExt).embed.manifest</OutputManifestFile>
+    </Manifest>
+    <ManifestResourceCompile>
+      <ResourceOutputFileName>$(IntDir)$(TargetName)$(TargetExt).embed.manifest.res</ResourceOutputFileName>
+    </ManifestResourceCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Midl>
@@ -292,9 +314,18 @@
       <TargetMachine>MachineX64</TargetMachine>
     </Link>
     <PostBuildEvent>
-      <Message>Performing registration...</Message>
-      <Command>"$(TargetPath)" /RegServer</Command>
+      <Message>COM Registration, Build Increment, Digital Signature</Message>
+      <Command>rem "$(TargetPath)" /RegServer
+"$(AlaxInfo_Common)\..\Utilities\IncrementBuild\_Bin\IncrementBuild-$(PlatformName).exe" configuration "$(ProjectDir)Module.ini" binary "$(TargetPath)" string "ConfigurationName" "$(ConfigurationName)" 
+"$(WindowsSdkDir)bin\x64\signtool" sign /v /f "$(AlaxInfo_Common)\Certificate\PrivateSPC.pfx" /d "Alax.Info $(ProjectName) Application" /du http://alax.info /n "Roman Ryltsov" "$(TargetPath)"
+</Command>
     </PostBuildEvent>
+    <Manifest>
+      <OutputManifestFile>$(IntDir)$(TargetName)$(TargetExt).embed.manifest</OutputManifestFile>
+    </Manifest>
+    <ManifestResourceCompile>
+      <ResourceOutputFileName>$(IntDir)$(TargetName)$(TargetExt).embed.manifest.res</ResourceOutputFileName>
+    </ManifestResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
@@ -315,6 +346,9 @@
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Module.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Manifest Include="Application.manifest" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
