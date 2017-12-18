@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<assembly xmlns="urn:schemas-microsoft-com:asm.v1" manifestVersion="1.0">
+	<trustInfo xmlns="urn:schemas-microsoft-com:asm.v3">
+		<security>
+			<requestedPrivileges>
+				<requestedExecutionLevel level="asInvoker" uiAccess="false"/>
+			</requestedPrivileges>
+		</security>
+	</trustInfo>
+	<assemblyIdentity type="win32" name="Client.exe" processorArchitecture="x86" version="1.0.0.1"/><file name="Server.dll"><typelib tlbid="{2EBD7A11-BDFD-4C27-9922-9E702F13C84C}" version="1.0" helpdir="" flags="HASDISKIMAGE"/><comClass description="Foo class" clsid="{4f24991f-6c43-4f3d-8c41-7569465db249}" threadingModel="Apartment" tlbid="{2ebd7a11-bdfd-4c27-9922-9e702f13c84c}"/></file></assembly>
