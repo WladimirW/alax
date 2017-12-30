@@ -1,8 +1,19 @@
 ////////////////////////////////////////////////////////////
-// Copyright (C) Roman Ryltsov, 2006-2017
+// Copyright (C) Roman Ryltsov, 2016-2017
 // Created by Roman Ryltsov roman@alax.info
 //
 // A permission to use the source code is granted as long as reference to 
 // source website http://alax.info is retained.
 
-#include "stdafx.h"
+import "oaidl.idl";
+import "ocidl.idl";
+
+[
+	uuid(),
+	version(1.0),
+]
+library AlaxInfoMediaFoundationDxgiCapabilities
+{
+	importlib("stdole2.tlb");
+};
+
