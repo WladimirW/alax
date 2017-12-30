@@ -1,5 +1,5 @@
 Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2013
+# Visual Studio 2017
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LogicalProcessorInformation", "LogicalProcessorInformation.vcxproj", "{3454D960-8277-4756-BD5B-B01DC91590F6}"
 EndProject
 Global

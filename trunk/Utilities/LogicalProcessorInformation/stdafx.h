@@ -1,24 +1,23 @@
 ////////////////////////////////////////////////////////////
-// Copyright (C) Alax.Info, 2006-2015
-// http://alax.info
+// Copyright (C) Roman Ryltsov, 2006-2017
+// Created by Roman Ryltsov roman@alax.info
 //
 // A permission to use the source code is granted as long as reference to 
 // source website http://alax.info is retained.
-// 
-// Created by Roman Ryltsov roman@alax.info
 
 #pragma once
 
 ////////////////////////////////////////////////////////////
 // Windows definitions
 
-//#define STRICT
-#define WINVER						0x0501	// Windows XP
-#define _WIN32_WINNT				0x0501	// Windows XP
-#define _WIN32_WINDOWS				0x0410	// Windows 98
-#define _WIN32_IE					0x0501	// Internet Explorer 5.01
-#define _RICHEDIT_VER				0x0200	// RichEdit 2.0
+#include "targetver.h"
+
 #define INLINE_HRESULT_FROM_WIN32
+#define _INC_WINDOWSX
+#define _WINSOCKAPI_ // We will want Winsock 2
+
+#include <windows.h>
+#include <shellapi.h>
 
 ////////////////////////////////////////////////////////////
 // ATL definitions
@@ -27,9 +26,9 @@
 #define _ATL_NO_AUTOMATIC_NAMESPACE
 #define _ATL_CSTRING_EXPLICIT_CONSTRUCTORS
 #define _ATL_ALL_WARNINGS
-#define _ATL_ATTRIBUTES
+//#define ATL_NO_ASSERT_ON_DESTROY_NONEXISTENT_WINDOW
 
-//#include "roatltrace.h" // Replacement for <atltrace.h>
+#include "roatltrace.h" // Replacement for <atltrace.h>
 #include <atlbase.h>
 #include <atlcom.h>
 #include <atlwin.h>
@@ -46,7 +45,7 @@ using namespace ATL;
 using namespace ATL::ATLPath;
 
 ////////////////////////////////////////////////////////////
-// WTL definitions
+// WTL
 
 #define _WTL_NO_CSTRING
 #define _WTL_NO_WTYPES
@@ -68,20 +67,20 @@ using namespace WTL;
 ////////////////////////////////////////////////////////////
 // Alax.Info ATL/WTL
 
-//#define REGISTRY_PRODUCTROOT	_T("SOFTWARE\\Alax.Info\\...")
-//#define REGISTRY_FILEROOT		REGISTRY_PRODUCTROOT
-//#define REGISTRY_ROOT			REGISTRY_FILEROOT
+#define REGISTRY_PRODUCTROOT	_T("SOFTWARE\\Alax.Info\\Utility\\LogicalProcessorInformation")
+#define REGISTRY_FILEROOT		REGISTRY_PRODUCTROOT
+#define REGISTRY_ROOT			REGISTRY_FILEROOT
 
-//#include "roatlbase.h"
-//#include "roatlvariants.h"
-//#include "roatlcom.h"
-//#include "roatlpersist.h"
-//#include "roatlmisc.h"
-//#include "roatlexceptionfilter.h"
-//#include "rowtlapp.h"
-//#include "rowtlcrack.h"
-//#include "rodialogs.h"
-//#include "rocontrols.h"
+#include "roatlbase.h"
+#include "roatlvariants.h"
+#include "roatlcom.h"
+#include "roatlpersist.h"
+#include "roatlmisc.h"
+#include "roatlexceptionfilter.h"
+#include "rowtlapp.h"
+#include "rowtlcrack.h"
+#include "rodialogs.h"
+#include "rocontrols.h"
 
 ////////////////////////////////////////////////////////////
 // Common Controls

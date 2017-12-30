@@ -32,15 +32,27 @@
     <ClInclude Include="stdafx.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="AboutDialog.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Module.ico">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="Module.ini" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Module.rc">
       <Filter>Resource Files</Filter>
     </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Manifest Include="Application.manifest">
+      <Filter>Header Files</Filter>
+    </Manifest>
   </ItemGroup>
 </Project>

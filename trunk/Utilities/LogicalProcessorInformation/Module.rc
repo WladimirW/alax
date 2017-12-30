@@ -53,7 +53,7 @@ END
 
 // Icon with lowest ID value placed first to ensure application icon
 // remains consistent on all systems.
-IDR_MAINFRAME           ICON                    "Module.ico"
+IDI_MODULE           ICON                    "Module.ico"
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -66,6 +66,9 @@ CAPTION "Logical Processor Information"
 FONT 8, "MS Sans Serif", 0, 0, 0x0
 BEGIN
     EDITTEXT        IDC_TEXT,6,6,324,186,ES_MULTILINE | ES_AUTOVSCROLL | ES_AUTOHSCROLL | ES_READONLY | WS_VSCROLL | WS_HSCROLL | NOT WS_TABSTOP
+    PUSHBUTTON      "&Update",IDC_UPDATE,108,198,50,14,NOT WS_VISIBLE
+    PUSHBUTTON      "S&ubmit",IDC_SUBMIT,162,198,50,14
+    PUSHBUTTON      "&Save As...",IDC_SAVEAS,216,198,50,14
     DEFPUSHBUTTON   "Close",IDOK,276,198,50,14
 END
 
@@ -91,35 +94,11 @@ END
 
 /////////////////////////////////////////////////////////////////////////////
 //
-// Accelerator
-//
-
-IDR_MAINFRAME ACCELERATORS
-BEGIN
-    "N",            ID_FILE_NEW,            VIRTKEY, CONTROL
-    "O",            ID_FILE_OPEN,           VIRTKEY, CONTROL
-    "S",            ID_FILE_SAVE,           VIRTKEY, CONTROL
-    "P",            ID_FILE_PRINT,          VIRTKEY, CONTROL
-    "Z",            ID_EDIT_UNDO,           VIRTKEY, CONTROL
-    "X",            ID_EDIT_CUT,            VIRTKEY, CONTROL
-    "C",            ID_EDIT_COPY,           VIRTKEY, CONTROL
-    "V",            ID_EDIT_PASTE,          VIRTKEY, CONTROL
-    VK_BACK,        ID_EDIT_UNDO,           VIRTKEY, ALT
-    VK_DELETE,      ID_EDIT_CUT,            VIRTKEY, SHIFT
-    VK_INSERT,      ID_EDIT_COPY,           VIRTKEY, CONTROL
-    VK_INSERT,      ID_EDIT_PASTE,          VIRTKEY, SHIFT
-    VK_F6,          ID_NEXT_PANE,           VIRTKEY 
-    VK_F6,          ID_PREV_PANE,           VIRTKEY, SHIFT
-END
-
-
-/////////////////////////////////////////////////////////////////////////////
-//
 // Version
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION  1, 0, 0, 59
+ FILEVERSION  1, 0, 0, 78
  PRODUCTVERSION 1,0,0,1
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
@@ -136,13 +115,13 @@ BEGIN
         BLOCK "040904b0"
         BEGIN
             VALUE "Comments", "Created by Roman Ryltsov roman@alax.info"
-            VALUE "CompanyName", "Alax.Info"
-            VALUE "FileDescription", "LogicalProcessorInformation Module"
-            VALUE "FileVersion",  "1, 0, 0, 59\0"
+            VALUE "CompanyName", "Roman Ryltsov"
+            VALUE "FileDescription", "Alax.Info Logical Processor Information Utility"
+            VALUE "FileVersion",  "1, 0, 0, 78\0"
             VALUE "InternalName", "LogicalProcessorInformation"
-            VALUE "LegalCopyright", "Copyright (C) Alax.Info, 2006-2011"
+            VALUE "LegalCopyright", "Copyright © Alax.Info, Roman Ryltsov, 2006-2017"
             VALUE "OriginalFilename", "LogicalProcessorInformation.exe"
-            VALUE "ProductName", "LogicalProcessorInformation Module"
+            VALUE "ProductName", "Alax.Info Logical Processor Information"
             VALUE "ProductVersion", "1, 0, 0, 1"
         END
     END
@@ -157,11 +136,6 @@ END
 //
 // String Table
 //
-
-STRINGTABLE
-BEGIN
-    IDR_MAINFRAME           "LogicalProcessorInformation"
-END
 
 STRINGTABLE
 BEGIN
