@@ -1,0 +1,4 @@
+nCoCreateInstanceResult 0x80040154
+hModule 0x00007FFDDE1A0000
+nDllGetClassObjectResult 0x00000000
+nCreateInstanceResult 0x8000FFFF
