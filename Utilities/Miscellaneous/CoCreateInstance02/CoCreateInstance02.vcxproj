@@ -93,7 +93,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>packages\EasyHookNativePackage.2.7.6578.1\build\native\lib\$(Platform)\v140\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>packages\EasyHookNativePackage.2.7.6578.1\build\native\lib\$(Platform)\v140\$(Configuration);packages\minhook.1.3.3\lib\native\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
       <Command>copy /b /y "$(SolutionDir)packages\EasyHookNativePackage.redist.2.7.6578.1\build\native\bin\$(Platform)\v140\$(Configuration)\EasyHook$(PlatformArchitecture).dll" "$(TargetDir)"</Command>
@@ -110,7 +110,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>packages\EasyHookNativePackage.2.7.6578.1\build\native\lib\$(Platform)\v140\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>packages\EasyHookNativePackage.2.7.6578.1\build\native\lib\$(Platform)\v140\$(Configuration);packages\minhook.1.3.3\lib\native\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
       <Command>copy /b /y "$(SolutionDir)packages\EasyHookNativePackage.redist.2.7.6578.1\build\native\bin\$(Platform)\v140\$(Configuration)\EasyHook$(PlatformArchitecture).dll" "$(TargetDir)"</Command>
@@ -131,7 +131,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>packages\EasyHookNativePackage.2.7.6578.1\build\native\lib\$(Platform)\v140\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>packages\EasyHookNativePackage.2.7.6578.1\build\native\lib\$(Platform)\v140\$(Configuration);packages\minhook.1.3.3\lib\native\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
       <Command>copy /b /y "$(SolutionDir)packages\EasyHookNativePackage.redist.2.7.6578.1\build\native\bin\$(Platform)\v140\$(Configuration)\EasyHook$(PlatformArchitecture).dll" "$(TargetDir)"</Command>
@@ -152,7 +152,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>packages\EasyHookNativePackage.2.7.6578.1\build\native\lib\$(Platform)\v140\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>packages\EasyHookNativePackage.2.7.6578.1\build\native\lib\$(Platform)\v140\$(Configuration);packages\minhook.1.3.3\lib\native\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
       <Command>copy /b /y "$(SolutionDir)packages\EasyHookNativePackage.redist.2.7.6578.1\build\native\bin\$(Platform)\v140\$(Configuration)\EasyHook$(PlatformArchitecture).dll" "$(TargetDir)"</Command>
@@ -168,6 +168,7 @@
   <ImportGroup Label="ExtensionTargets">
     <Import Project="packages\EasyHookNativePackage.redist.2.7.6578.1\build\native\EasyHookNativePackage.redist.targets" Condition="Exists('packages\EasyHookNativePackage.redist.2.7.6578.1\build\native\EasyHookNativePackage.redist.targets')" />
     <Import Project="packages\EasyHookNativePackage.2.7.6578.1\build\native\EasyHookNativePackage.targets" Condition="Exists('packages\EasyHookNativePackage.2.7.6578.1\build\native\EasyHookNativePackage.targets')" />
+    <Import Project="packages\minhook.1.3.3\build\native\minhook.targets" Condition="Exists('packages\minhook.1.3.3\build\native\minhook.targets')" />
   </ImportGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
@@ -175,5 +176,6 @@
     </PropertyGroup>
     <Error Condition="!Exists('packages\EasyHookNativePackage.redist.2.7.6578.1\build\native\EasyHookNativePackage.redist.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\EasyHookNativePackage.redist.2.7.6578.1\build\native\EasyHookNativePackage.redist.targets'))" />
     <Error Condition="!Exists('packages\EasyHookNativePackage.2.7.6578.1\build\native\EasyHookNativePackage.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\EasyHookNativePackage.2.7.6578.1\build\native\EasyHookNativePackage.targets'))" />
+    <Error Condition="!Exists('packages\minhook.1.3.3\build\native\minhook.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\minhook.1.3.3\build\native\minhook.targets'))" />
   </Target>
 </Project>
