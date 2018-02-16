@@ -1,0 +1,17 @@
+Microsoft Windows [Version 10.0.16299.192]
+(c) Корпорация Майкрософт (Microsoft Corporation), 2017. Все права защищены.
+
+E:\>dxgiduplicateoutput01
+FeatureLevel 0xB000
+AdapterDescription.Description "NVIDIA GeForce 940MX"
+nDuplicateOutputResult 0x887A0004
+
+E:\>dxgiduplicateoutput01
+FeatureLevel 0xB100
+AdapterDescription.Description "Intel(R) HD Graphics 520"
+nDuplicateOutputResult 0x00000000
+
+E:\>dxgiduplicateoutput01
+FeatureLevel 0xB000
+AdapterDescription.Description "NVIDIA GeForce 940MX"
+nDuplicateOutputResult 0x887A0004
