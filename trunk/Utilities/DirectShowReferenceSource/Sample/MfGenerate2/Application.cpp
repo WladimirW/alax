@@ -48,22 +48,27 @@ public:
 		//	__D(pMediaSource, E_NOINTERFACE);
 		//}
 		CComPtr<IMFMediaSource> pVideoMediaSource, pAudioMediaSource;
-		const SIZE g_Extent = { 640, 360 };
-		const LONG g_nFrameRateNumerator = 30000;
-		const LONG g_nFrameRateDenominator = 1001;
-		const LONG g_nDuration = 1 * 60; // minutes
-		const LONG g_nVideoBitrate = (2 << 10) * 1000; // 2 MBps
+		const BOOL g_bVideo = TRUE;
+		const SIZE g_Extent = 
+			{ 1920, 1080 };
+			//{ 7680 / 2, 4320 / 2 };
+			//{ 7680, 4320 };
+		const LONG g_nFrameRateNumerator = 50000;
+		const LONG g_nFrameRateDenominator = 1000;
+		const LONG g_nVideoBitrate = (10 * 1000) * 1000; // MBps
+		const BOOL g_bAudio = FALSE;
 		const LONG g_nSampleRate = 48000;
 		const LONG g_nChannelCount = 1;
 		const LONG g_nBitDepth = 16;
-		const LONG g_nAudioBitrate = 20 * 1000;
+		const LONG g_nAudioBitrate = 20 * 1000; // kBps
+		const LONG g_nDuration = 1 * 60; // minutes
 		#pragma region Video
-		if(TRUE)
+		if(g_bVideo)
 		{
 			using namespace AlaxInfoDirectShowReferenceSource;
 			CComPtr<IVideoMediaSource> pSource;
 			__C(pSource.CoCreateInstance(__uuidof(VideoMediaSource)));
-			__C(pSource->SetMediaType(g_Extent.cx, g_Extent.cy, CComVariant(_PersistHelper::StringFromIdentifier(MEDIASUBTYPE_ARGB32))));
+			__C(pSource->SetMediaType(g_Extent.cx, g_Extent.cy, CComVariant(_PersistHelper::StringFromIdentifier(MEDIASUBTYPE_RGB32))));
 			//__C(pSource->SetMediaTypeAspectRatio(...));
 			__C(pSource->SetMediaTypeRate(g_nFrameRateNumerator, g_nFrameRateDenominator));
 			__C(pSource->put_Duration((DOUBLE) g_nDuration));
@@ -71,7 +76,7 @@ public:
 		}
 		#pragma endregion 
 		#pragma region Audio
-		if(TRUE)
+		if(g_bAudio)
 		{
 			using namespace AlaxInfoDirectShowReferenceSource;
 			CComPtr<IAudioMediaSource> pSource;
@@ -145,8 +150,11 @@ public:
 			}
 			#pragma endregion
 			MF::CAttributes pAttributes;
-			pAttributes.Create(1);
-			pAttributes[MF_TRANSCODE_CONTAINERTYPE] = MFTranscodeContainerType_MPEG4;
+			pAttributes.Create(2);
+			pAttributes[MF_TRANSCODE_CONTAINERTYPE] = 
+				MFTranscodeContainerType_MPEG4;
+				//MFTranscodeContainerType_FMPEG4;
+			pAttributes[MF_TRANSCODE_TOPOLOGYMODE] = (UINT32) MF_TRANSCODE_TOPOLOGYMODE_HARDWARE_ALLOWED;
 			__C(pTranscodeProfile->SetContainerAttributes(pAttributes));
 		}
 		#pragma endregion
@@ -232,4 +240,3 @@ int _tmain(int argc, _TCHAR* argv[])
 	}
 	return 0;
 }
-
