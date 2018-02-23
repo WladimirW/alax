@@ -37,7 +37,7 @@ using namespace ATL;
 ////////////////////////////////////////////////////////////
 // Alax.Info ATL/WTL
 
-#define REGISTRY_PRODUCTROOT	_T("SOFTWARE\\Alax.Info\\Utilities")
+#define REGISTRY_PRODUCTROOT	_T("SOFTWARE\\Alax.Info\\Utility")
 #define REGISTRY_FILEROOT		REGISTRY_PRODUCTROOT
 #define REGISTRY_ROOT			REGISTRY_FILEROOT
 

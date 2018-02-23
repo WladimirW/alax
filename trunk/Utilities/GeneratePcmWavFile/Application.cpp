@@ -1,8 +1,6 @@
 ////////////////////////////////////////////////////////////
-// Copyright (C) Roman Ryltsov, 2008-2011
+// Copyright (C) Roman Ryltsov, 2008-2018
 // Created by Roman Ryltsov roman@alax.info
-// 
-// $Id$
 
 #include "stdafx.h"
 #include "rodshow.h"
@@ -16,63 +14,6 @@ class CModule :
 	typedef CThreadT<CModule> CThread;
 
 public:
-
-	////////////////////////////////////////////////////////
-	// CGenericFilterGraph
-
-	//class CGenericFilterGraph
-	//{
-	//public:
-	//	#if _DEVELOPMENT
-	//		BOOL m_bShowDestructorMessageBox;
-	//	#endif // _DEVELOPMENT
-	//	CComPtr<IFilterGraph2> m_pFilterGraph;
-	//	CComPtr<IMediaControl> m_pMediaControl;
-	//	CComPtr<IMediaEventEx> m_pMediaEventEx;
-	//	CComPtr<IMediaFilter> m_pMediaFilter;
-	//	CComPtr<IMediaPosition> m_pMediaPosition;
-
-	//public:
-	//// CGenericFilterGraph
-	//	CGenericFilterGraph(BOOL bShowDestructorMessageBox = FALSE) throw()
-	//	{
-	//		bShowDestructorMessageBox;
-	//		#if _DEVELOPMENT
-	//			m_bShowDestructorMessageBox = bShowDestructorMessageBox;
-	//		#endif // _DEVELOPMENT
-	//	}
-	//	~CGenericFilterGraph() throw()
-	//	{
-	//		#if _DEVELOPMENT
-	//			if(m_pFilterGraph && m_bShowDestructorMessageBox)
-	//				AtlMessageBox(GetActiveWindow(), _T("DirectShow Filter Graph is about to be Released - Break In"), _T("Debug"), MB_ICONWARNING | MB_OK);
-	//		#endif // _DEVELOPMENT
-	//	}
-	//	VOID CoCreateInstance(const CLSID& ClassIdentifier = CLSID_FilterGraph)
-	//	{
-	//		__C(m_pFilterGraph.CoCreateInstance(ClassIdentifier));
-	//		m_pMediaControl = CComQIPtr<IMediaControl>(m_pFilterGraph);
-	//		m_pMediaEventEx = CComQIPtr<IMediaEventEx>(m_pFilterGraph);
-	//		m_pMediaFilter = CComQIPtr<IMediaFilter>(m_pFilterGraph);
-	//		m_pMediaPosition = CComQIPtr<IMediaPosition>(m_pFilterGraph);
-	//		__D(m_pMediaControl && m_pMediaEventEx && m_pMediaFilter && m_pMediaPosition, E_NOINTERFACE);
-	//	}
-	//	VOID SetShowDestructorMessageBox(BOOL bShowDestructorMessageBox = TRUE)
-	//	{
-	//		bShowDestructorMessageBox;
-	//		#if _DEVELOPMENT
-	//			m_bShowDestructorMessageBox = bShowDestructorMessageBox;
-	//		#endif // _DEVELOPMENT
-	//	}
-	//	operator const CComPtr<IFilterGraph2>& () const throw()
-	//	{
-	//		return m_pFilterGraph;
-	//	}
-	//	const CComPtr<IFilterGraph2>& operator -> () const throw()
-	//	{
-	//		return m_pFilterGraph;
-	//	}
-	//};
 
 	////////////////////////////////////////////////////////
 	// CSourceFilter
@@ -116,7 +57,7 @@ public:
 
 		public:
 		// CThreadContext
-			CThreadContext(CEvent& TerminationEvent) throw() :
+			CThreadContext(CEvent& TerminationEvent) :
 				CPushSourceFilter::CThreadContext(TerminationEvent),
 				m_nMediaSampleTime(0),
 				m_nCurrentSampleIndex(0)
@@ -151,7 +92,7 @@ public:
 
 		public:
 		// COutputPin
-			COutputPin() throw() :
+			COutputPin() :
 				m_nDataLength(0),
 				m_fSignalPeriod(0),
 				m_fSignalAmplitude(0),
@@ -159,7 +100,7 @@ public:
 			{
 				_Z4(atlTraceRefcount, 4, _T("this 0x%p\n"), this);
 			}
-			~COutputPin() throw()
+			~COutputPin()
 			{
 				_Z4(atlTraceRefcount, 4, _T("this 0x%p\n"), this);
 			}
@@ -168,7 +109,7 @@ public:
 				CRoCriticalSectionLock DataLock(GetDataCriticalSection());
 				_W(MediaTypeList.AddTail(m_pDataMediaType));
 			}
-			BOOL CheckMediaType(const CMediaType& pMediaType) const throw()
+			BOOL CheckMediaType(const CMediaType& pMediaType) const
 			{
 				_A(pMediaType);
 				//if(pMediaType->majortype != MEDIATYPE_Audio || pMediaType->subtype != MEDIASUBTYPE_PCM)
@@ -178,7 +119,7 @@ public:
 				//	return FALSE;
 				return m_pDataMediaType.Compare(pMediaType);
 			}
-			BOOL DecideMemAllocatorProperties(IMemAllocator* pMemAllocator, ALLOCATOR_PROPERTIES Properties) throw()
+			BOOL DecideMemAllocatorProperties(IMemAllocator* pMemAllocator, ALLOCATOR_PROPERTIES Properties)
 			{
 				CRoCriticalSectionLock DataLock(GetDataCriticalSection());
 				const CMediaType& pMediaType = GetMediaTypeReference();
@@ -202,13 +143,14 @@ public:
 				SetLatency(nBufferTime);
 				return TRUE;
 			}
-			VOID InitializeThread(CThreadContext& ThreadContext) throw()
+			VOID InitializeThread(CThreadContext& ThreadContext)
 			{
 				CRoCriticalSectionLock DataLock(GetDataCriticalSection());
 				__super::InitializeThread(ThreadContext);
 				if(m_fSignalPeriod > 0)
 				{
-					__D(m_pDataMediaType.GetWaveFormatEx()->wBitsPerSample == 16, E_NOTIMPL);
+					const WORD wBitsPerSample = m_pDataMediaType.GetWaveFormatEx()->wBitsPerSample;
+					__D(wBitsPerSample == 16 || wBitsPerSample == 24 || wBitsPerSample == 32, E_NOTIMPL);
 					ThreadContext.m_nCurrentSampleIndex = 0;
 				}
 			}
@@ -231,60 +173,86 @@ public:
 					FillMemory(Properties.pbBuffer, nDataSize, 0x80);
 				} else
 				{
+					_A(pWaveFormatEx->wBitsPerSample == 16 || pWaveFormatEx->wBitsPerSample == 32);
 					ZeroMemory(Properties.pbBuffer, nDataSize);
 					#pragma region Sine Wave Data
 					if(m_fSignalPeriod > 0)
 					{
 						SIZE_T nSampleIndex = 0;
-						for(SIZE_T nIndex = 0; nIndex < nDataSize; nIndex += pWaveFormatEx->nBlockAlign, nSampleIndex++)
+						switch(pWaveFormatEx->wBitsPerSample)
 						{
-							#pragma region Per-channel Frequencies and Amplitudes
-							if(FALSE)
+						case 16:
 							{
-								const DOUBLE pfSignalFrequencies[6] = { 1001, 1001, 1001, 1001, 1001, 1001 };
-								const DOUBLE pfSignalAmplitudes[6] = { 0, 0, m_fSignalAmplitude, 0, 0, 0 };
-								SHORT* pnSampleData = (SHORT*) (Properties.pbBuffer + nIndex);
-								_A(DIM(pfSignalFrequencies) == DIM(pfSignalAmplitudes));
-								_A(pWaveFormatEx->nChannels <= DIM(pfSignalFrequencies));
-								for(WORD nChannelIndex = 0; nChannelIndex < pWaveFormatEx->nChannels; nChannelIndex++)
+								for(SIZE_T nIndex = 0; nIndex < nDataSize; nIndex += pWaveFormatEx->nBlockAlign, nSampleIndex++)
 								{
-									const DOUBLE fSignalPeriod = (DOUBLE) pWaveFormatEx->nSamplesPerSec / pfSignalFrequencies[nChannelIndex];
-									const DOUBLE fSignalAmplitude = pfSignalAmplitudes[nChannelIndex];
-									const SHORT nValue = (SHORT) (fSignalAmplitude * sin(2 * M_PI * (ThreadContext.m_nCurrentSampleIndex + nSampleIndex) / fSignalPeriod));
-									pnSampleData[nChannelIndex] = nValue;
+									#pragma region Per-channel Frequencies and Amplitudes
+									if(FALSE)
+									{
+										const DOUBLE pfSignalFrequencies[6] = { 1000, 1000, 1000, 1000, 1000, 1000, };
+										const DOUBLE pfSignalAmplitudes[6] = { m_fSignalAmplitude, m_fSignalAmplitude, m_fSignalAmplitude, 0, 0, 0,  };
+										//const DOUBLE pfSignalFrequencies[2] = { 1000, 1000, };
+										//const DOUBLE pfSignalAmplitudes[2] = { m_fSignalAmplitude, m_fSignalAmplitude, };
+										SHORT* pnSampleData = (SHORT*) (Properties.pbBuffer + nIndex);
+										_A(DIM(pfSignalFrequencies) == DIM(pfSignalAmplitudes));
+										_A(pWaveFormatEx->nChannels <= DIM(pfSignalFrequencies));
+										for(WORD nChannelIndex = 0; nChannelIndex < pWaveFormatEx->nChannels; nChannelIndex++)
+										{
+											const DOUBLE fSignalPeriod = (DOUBLE) pWaveFormatEx->nSamplesPerSec / pfSignalFrequencies[nChannelIndex];
+											const DOUBLE fSignalAmplitude = pfSignalAmplitudes[nChannelIndex];
+											const SHORT nValue = (SHORT) (fSignalAmplitude * sin(2 * M_PI * (ThreadContext.m_nCurrentSampleIndex + nSampleIndex) / fSignalPeriod));
+											pnSampleData[nChannelIndex] = nValue;
+										}
+										continue;
+									}
+									#pragma endregion
+									#pragma region Stream Time Coefficients
+									#if TRUE && FALSE
+									{
+										COMPILER_MESSAGE("Every 170 seconds: 50 seconds 1.0, 70 seconds 0.0, 50 seconds 1.0");
+										#pragma region Factor
+										REFERENCE_TIME nTime = ThreadContext.m_nMediaSampleTime + nIndex * (1000 * 10000i64) / pWaveFormatEx->nAvgBytesPerSec;
+										nTime /= 1000 * 10000i64;
+										// NOTE: Every 170 seconds: 50 seconds 1.0, 70 seconds 0.0, 50 seconds 1.0
+										nTime %= 170;
+										const DOUBLE fTimeFactor = (nTime < 50 || nTime >= 120) ? 1.0 : (1.0 / 256);
+										#pragma endregion
+										const SHORT nValue = (SHORT) (m_fSignalAmplitude * sin(2 * M_PI * (ThreadContext.m_nCurrentSampleIndex + nSampleIndex) / m_fSignalPeriod));
+										SHORT* pnSampleData = (SHORT*) (Properties.pbBuffer + nIndex);
+										for(WORD nChannelIndex = 0; nChannelIndex < pWaveFormatEx->nChannels; nChannelIndex++)
+											pnSampleData[nChannelIndex] = (SHORT) (fTimeFactor * nValue);
+										continue;
+									}
+									#endif // TRUE
+									#pragma endregion
+									// NOTE: Phase shift might be added here, e.g. "... + nSampleIndex + 0.25)..."
+									const INT16 nValue = (INT16) (m_fSignalAmplitude * sin(2 * M_PI * (ThreadContext.m_nCurrentSampleIndex + nSampleIndex) / m_fSignalPeriod));
+									INT16* pnSampleData = (INT16*) (Properties.pbBuffer + nIndex);
+									for(WORD nChannelIndex = 0; nChannelIndex < pWaveFormatEx->nChannels; nChannelIndex++)
+										pnSampleData[nChannelIndex] = nValue;
 								}
-								continue;
 							}
-							#pragma endregion
-							#pragma region Stream Time Coefficients
-							#if TRUE && FALSE
+							break;
+						case 32:
 							{
-								COMPILER_MESSAGE("Every 170 seconds: 50 seconds 1.0, 70 seconds 0.0, 50 seconds 1.0");
-								#pragma region Factor
-								REFERENCE_TIME nTime = ThreadContext.m_nMediaSampleTime + nIndex * (1000 * 10000i64) / pWaveFormatEx->nAvgBytesPerSec;
-								nTime /= 1000 * 10000i64;
-								// NOTE: Every 170 seconds: 50 seconds 1.0, 70 seconds 0.0, 50 seconds 1.0
-								nTime %= 170;
-								const DOUBLE fTimeFactor = (nTime < 50 || nTime >= 120) ? 1.0 : (1.0 / 256);
-								#pragma endregion
-								const SHORT nValue = (SHORT) (m_fSignalAmplitude * sin(2 * M_PI * (ThreadContext.m_nCurrentSampleIndex + nSampleIndex) / m_fSignalPeriod));
-								SHORT* pnSampleData = (SHORT*) (Properties.pbBuffer + nIndex);
-								for(WORD nChannelIndex = 0; nChannelIndex < pWaveFormatEx->nChannels; nChannelIndex++)
-									pnSampleData[nChannelIndex] = (SHORT) (fTimeFactor * nValue);
-								continue;
+								for(SIZE_T nIndex = 0; nIndex < nDataSize; nIndex += pWaveFormatEx->nBlockAlign, nSampleIndex++)
+								{
+									// NOTE: Phase shift might be added here, e.g. "... + nSampleIndex + 0.25)..."
+									const INT32 nValue = (INT32) (m_fSignalAmplitude * sin(2 * M_PI * (ThreadContext.m_nCurrentSampleIndex + nSampleIndex) / m_fSignalPeriod));
+									INT32* pnSampleData = (INT32*) (Properties.pbBuffer + nIndex);
+									for(WORD nChannelIndex = 0; nChannelIndex < pWaveFormatEx->nChannels; nChannelIndex++)
+										pnSampleData[nChannelIndex] = nValue;
+								}
 							}
-							#endif // TRUE
-							#pragma endregion
-							const SHORT nValue = (SHORT) (m_fSignalAmplitude * sin(2 * M_PI * (ThreadContext.m_nCurrentSampleIndex + nSampleIndex) / m_fSignalPeriod));
-							SHORT* pnSampleData = (SHORT*) (Properties.pbBuffer + nIndex);
-							for(WORD nChannelIndex = 0; nChannelIndex < pWaveFormatEx->nChannels; nChannelIndex++)
-								pnSampleData[nChannelIndex] = nValue;
+							break;
+						default:
+							_A(FALSE);
 						}
 					}
 					#pragma endregion
 					#pragma region Noise Wave Data
 					if(m_fNoiseAmplitude > 0)
 					{
+						_A(pWaveFormatEx->wBitsPerSample == 16);
 						for(SIZE_T nIndex = 0; nIndex < nDataSize; nIndex += pWaveFormatEx->nBlockAlign)
 						{
 							SHORT* pnSampleData = (SHORT*) (Properties.pbBuffer + nIndex);
@@ -322,16 +290,16 @@ public:
 
 	public:
 	// CSourceFilter
-		CSourceFilter() throw() :
+		CSourceFilter() :
 			CBasePersistT<CSourceFilter>(GetDataCriticalSection())
 		{
 			_Z4(atlTraceRefcount, 4, _T("this 0x%p\n"), this);
 		}
-		~CSourceFilter() throw()
+		~CSourceFilter()
 		{
 			_Z4(atlTraceRefcount, 4, _T("this 0x%p\n"), this);
 		}
-		HRESULT FinalConstruct() throw()
+		HRESULT FinalConstruct()
 		{
 			_ATLTRY
 			{
@@ -344,7 +312,7 @@ public:
 			}
 			return S_OK;
 		}
-		VOID FinalRelease() throw()
+		VOID FinalRelease()
 		{
 			m_pOutputPin = NULL;
 		}
@@ -360,7 +328,7 @@ public:
 		{
 			m_pOutputPin->DeliverNewSegment(nStartTime, nStopTime, fRate);
 		}
-		static BOOL CanCue() throw()
+		static BOOL CanCue()
 		{
 			return FALSE;
 		}
@@ -372,15 +340,15 @@ public:
 		{
 			m_pOutputPin->RunPin(nStartTime);
 		}
-		VOID PauseFilter() throw()
+		VOID PauseFilter()
 		{
 			m_pOutputPin->PausePin();
 		}
-		VOID StopFilter() throw()
+		VOID StopFilter()
 		{
 			m_pOutputPin->StopPin();
 		}
-		const CObjectPtr<COutputPin>& GetOutputPin() const throw()
+		const CObjectPtr<COutputPin>& GetOutputPin() const
 		{
 			return m_pOutputPin;
 		}
@@ -404,19 +372,19 @@ private:
 
 public:
 // CModule
-	CModule() throw()
+	CModule()
 	{
 		AtlTraceSetDefaultSettings();
-		_Z4(atlTraceRefcount, 4, _T("this 0x%p\n"), this);
+		_Z4_THIS();
 		ZeroMemory(&m_WaveFormatEx, sizeof m_WaveFormatEx);
 		m_nLength = 0;
 		m_nSignalFrequency = 0;
 		m_nSignalLoudness = 0;
 		m_nNoiseLoudness = 0;
 	}
-	~CModule() throw()
+	~CModule()
 	{
-		_Z4(atlTraceRefcount, 4, _T("this 0x%p\n"), this);
+		_Z4_THIS();
 	}
 	VOID SetSampleRate(UINT nSampleRate)
 	{
@@ -430,7 +398,7 @@ public:
 	}
 	VOID SetSampleBitCount(UINT nSampleBitCount)
 	{
-		__D(nSampleBitCount == 8 || nSampleBitCount == 16, E_INVALIDARG);
+		__D(nSampleBitCount == 8 || nSampleBitCount == 16 || nSampleBitCount == 24 || nSampleBitCount == 32, E_INVALIDARG);
 		m_WaveFormatEx.wBitsPerSample = (WORD) nSampleBitCount;
 	}
 	VOID SetLength(REFERENCE_TIME nLength)
@@ -494,17 +462,17 @@ public:
 		pSourceFilter.Construct()->Initialize(pWaveFormatEx, m_nLength);
 		if(m_nSignalFrequency && m_nSignalLoudness >= 0 || m_nNoiseLoudness)
 		{
-			__D(m_WaveFormatEx.wBitsPerSample == 16, E_NOTIMPL);
+			__D(m_WaveFormatEx.wBitsPerSample == 16 || m_WaveFormatEx.wBitsPerSample == 24 || m_WaveFormatEx.wBitsPerSample == 32, E_NOTIMPL);
 			DOUBLE fSignalPeriod = 0, fSignalAmplitude = 0;
 			if(m_nSignalFrequency && m_nSignalLoudness >= 0)
 			{
 				fSignalPeriod = (DOUBLE) pWaveFormatEx->nSamplesPerSec / m_nSignalFrequency;
-				fSignalAmplitude = 32767.0 / pow(10.0, m_nSignalLoudness / 20.0);
+				fSignalAmplitude = (((UINT64) 1 << (m_WaveFormatEx.wBitsPerSample - 1)) - 1) / pow(10.0, m_nSignalLoudness / 20.0);
 			}
 			DOUBLE fNoiseAmplitude = 0;
 			if(m_nNoiseLoudness)
 			{
-				fNoiseAmplitude = 32767.0 / pow(10.0, m_nNoiseLoudness / 20.0);
+				fNoiseAmplitude = (((UINT64) 1 << (m_WaveFormatEx.wBitsPerSample - 1)) - 1) / pow(10.0, m_nNoiseLoudness / 20.0);
 			}
 			pSourceFilter->InitializeSignal(fSignalPeriod, fSignalAmplitude, fNoiseAmplitude);
 		}
