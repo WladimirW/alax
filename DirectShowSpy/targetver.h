@@ -15,6 +15,6 @@
 
 #pragma once
 
-#include <sdkddkver.h>
 #include <winsdkver.h>
+#include <sdkddkver.h>
 

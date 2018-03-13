@@ -86,3 +86,16 @@ STDAPI DllInstall(BOOL bInstall, LPCWSTR pszCommandLine) throw()
 	}
 	return nResult;
 }
+
+#if defined(AVAILABILITY_INTERNALWRITEMINIDUMP)
+	#if defined(_WIN64)
+		#pragma comment(linker, "/EXPORT:WriteMiniDump,PRIVATE")
+	#else
+		#pragma comment(linker, "/EXPORT:WriteMiniDump=_WriteMiniDump@16,PRIVATE")
+		extern "C" // __declspec(dllexport) 
+	#endif
+	extern "C" STDAPI WriteMiniDump(HWND hParentWindow, HINSTANCE hInstance, LPSTR pszCommandLine, INT nShowCommand)
+	{
+		return InternalWriteMiniDump(hParentWindow, hInstance, pszCommandLine, nShowCommand);
+	}
+#endif // defined(AVAILABILITY_INTERNALWRITEMINIDUMP)

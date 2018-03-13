@@ -1336,7 +1336,13 @@ public:
 		m_GraphPropertyPage(this)
 	{
 		if(!_tcslen(m_sPath))
-			m_sPath = CDebugTraceBase::GetLocalMachineFilePath();
+		{
+			const CPath sDirectory = CDebugTraceBase::GetLocalMachineDirectory();
+			CDebugTraceData Data;
+			Data.Configure(sDirectory, _T(""), _T(""));
+			Data.CreateLogFilePath(sDirectory);
+			m_sPath = Data.m_pszFilePath;
+		}
 		#if _DEVELOPMENT && FALSE
 			static LPCTSTR g_pszPath = _T("D:\\Projects\\A&H\\LuxRiot\\_Issues\\45 Sanyo XP Issues\\DirectShowSpy.log");
 			m_sPath = g_pszPath;

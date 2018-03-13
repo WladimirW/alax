@@ -30,46 +30,46 @@
     <ProjectGuid>{1A5DA4E5-ED09-476A-9A42-538D0DDA3FB9}</ProjectGuid>
     <RootNamespace>DirectShowSpy</RootNamespace>
     <Keyword>AtlProj</Keyword>
-    <WindowsTargetPlatformVersion>10.0.15063.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release Trace|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <PlatformToolset>v140_xp</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <UseOfAtl>Static</UseOfAtl>
     <CharacterSet>Unicode</CharacterSet>
     <WholeProgramOptimization>true</WholeProgramOptimization>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <PlatformToolset>v140_xp</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <UseOfAtl>Static</UseOfAtl>
     <CharacterSet>Unicode</CharacterSet>
     <WholeProgramOptimization>true</WholeProgramOptimization>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <PlatformToolset>v140_xp</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <UseOfAtl>Dynamic</UseOfAtl>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release Trace|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <PlatformToolset>v140_xp</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <UseOfAtl>Static</UseOfAtl>
     <CharacterSet>Unicode</CharacterSet>
     <WholeProgramOptimization>true</WholeProgramOptimization>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <PlatformToolset>v140_xp</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <UseOfAtl>Static</UseOfAtl>
     <CharacterSet>Unicode</CharacterSet>
     <WholeProgramOptimization>true</WholeProgramOptimization>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <PlatformToolset>v140_xp</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <UseOfAtl>Dynamic</UseOfAtl>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
@@ -104,6 +104,7 @@
     <IgnoreImportLibrary>true</IgnoreImportLibrary>
     <LinkIncremental>true</LinkIncremental>
     <IncludePath>..\..\Repository-Private\Utilities\DeflateTools\bzip2-1.0.6;$(IncludePath)</IncludePath>
+    <PostBuildEventUseInBuild>false</PostBuildEventUseInBuild>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <OutDir>$(SolutionDir)_Bin\$(Platform)\$(Configuration)\</OutDir>
@@ -111,6 +112,7 @@
     <IgnoreImportLibrary>true</IgnoreImportLibrary>
     <LinkIncremental>true</LinkIncremental>
     <IncludePath>..\..\Repository-Private\Utilities\DeflateTools\bzip2-1.0.6;$(IncludePath)</IncludePath>
+    <PostBuildEventUseInBuild>false</PostBuildEventUseInBuild>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>$(SolutionDir)_Bin\$(Platform)\$(Configuration)\</OutDir>
@@ -179,6 +181,13 @@
       <TargetMachine>MachineX86</TargetMachine>
       <AdditionalLibraryDirectories>..\..\Repository-Private\Utilities\DeflateTools\_Bin</AdditionalLibraryDirectories>
     </Link>
+    <PostBuildEvent>
+      <Command>"$(AlaxInfo_Common)\..\Utilities\IncrementBuild\_Bin\IncrementBuild-$(PlatformName).exe" configuration "$(ProjectDir)Module.ini" binary "$(TargetPath)" string "ConfigurationName" "$(ConfigurationName)" 
+rem "$(WindowsSdkDir)bin\x64\signtool" sign /v /f "$(AlaxInfo_Common)\Certificate\PrivateSPC.pfx" /d "Alax.Info $(ProjectName) Module" /du http://alax.info /n "Roman Ryltsov" "$(TargetPath)"</Command>
+    </PostBuildEvent>
+    <PostBuildEvent>
+      <Message>Build Increment, Digital Signature</Message>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Midl>
@@ -218,6 +227,13 @@
       <TargetMachine>MachineX64</TargetMachine>
       <AdditionalLibraryDirectories>..\..\Repository-Private\Utilities\DeflateTools\_Bin</AdditionalLibraryDirectories>
     </Link>
+    <PostBuildEvent>
+      <Command>"$(AlaxInfo_Common)\..\Utilities\IncrementBuild\_Bin\IncrementBuild-$(PlatformName).exe" configuration "$(ProjectDir)Module.ini" binary "$(TargetPath)" string "ConfigurationName" "$(ConfigurationName)" 
+rem "$(WindowsSdkDir)bin\x64\signtool" sign /v /f "$(AlaxInfo_Common)\Certificate\PrivateSPC.pfx" /d "Alax.Info $(ProjectName) Module" /du http://alax.info /n "Roman Ryltsov" "$(TargetPath)"</Command>
+    </PostBuildEvent>
+    <PostBuildEvent>
+      <Message>Build Increment, Digital Signature</Message>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Midl>
@@ -266,6 +282,13 @@
       <TargetMachine>MachineX86</TargetMachine>
       <AdditionalLibraryDirectories>..\..\Repository-Private\Utilities\DeflateTools\_Bin</AdditionalLibraryDirectories>
     </Link>
+    <PostBuildEvent>
+      <Command>"$(AlaxInfo_Common)\..\Utilities\IncrementBuild\_Bin\IncrementBuild-$(PlatformName).exe" configuration "$(ProjectDir)Module.ini" binary "$(TargetPath)" string "ConfigurationName" "$(ConfigurationName)" 
+rem "$(WindowsSdkDir)bin\x64\signtool" sign /v /f "$(AlaxInfo_Common)\Certificate\PrivateSPC.pfx" /d "Alax.Info $(ProjectName) Module" /du http://alax.info /n "Roman Ryltsov" "$(TargetPath)"</Command>
+    </PostBuildEvent>
+    <PostBuildEvent>
+      <Message>Build Increment, Digital Signature</Message>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Midl>
@@ -313,6 +336,13 @@
       <TargetMachine>MachineX64</TargetMachine>
       <AdditionalLibraryDirectories>..\..\Repository-Private\Utilities\DeflateTools\_Bin</AdditionalLibraryDirectories>
     </Link>
+    <PostBuildEvent>
+      <Command>"$(AlaxInfo_Common)\..\Utilities\IncrementBuild\_Bin\IncrementBuild-$(PlatformName).exe" configuration "$(ProjectDir)Module.ini" binary "$(TargetPath)" string "ConfigurationName" "$(ConfigurationName)" 
+rem "$(WindowsSdkDir)bin\x64\signtool" sign /v /f "$(AlaxInfo_Common)\Certificate\PrivateSPC.pfx" /d "Alax.Info $(ProjectName) Module" /du http://alax.info /n "Roman Ryltsov" "$(TargetPath)"</Command>
+    </PostBuildEvent>
+    <PostBuildEvent>
+      <Message>Build Increment, Digital Signature</Message>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release Trace|Win32'">
     <Midl>
@@ -361,6 +391,13 @@
       <TargetMachine>MachineX86</TargetMachine>
       <AdditionalLibraryDirectories>..\..\Repository-Private\Utilities\DeflateTools\_Bin</AdditionalLibraryDirectories>
     </Link>
+    <PostBuildEvent>
+      <Command>"$(AlaxInfo_Common)\..\Utilities\IncrementBuild\_Bin\IncrementBuild-$(PlatformName).exe" configuration "$(ProjectDir)Module.ini" binary "$(TargetPath)" string "ConfigurationName" "$(ConfigurationName)" 
+rem "$(WindowsSdkDir)bin\x64\signtool" sign /v /f "$(AlaxInfo_Common)\Certificate\PrivateSPC.pfx" /d "Alax.Info $(ProjectName) Module" /du http://alax.info /n "Roman Ryltsov" "$(TargetPath)"</Command>
+    </PostBuildEvent>
+    <PostBuildEvent>
+      <Message>Build Increment, Digital Signature</Message>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release Trace|x64'">
     <Midl>
@@ -408,6 +445,13 @@
       <TargetMachine>MachineX64</TargetMachine>
       <AdditionalLibraryDirectories>..\..\Repository-Private\Utilities\DeflateTools\_Bin</AdditionalLibraryDirectories>
     </Link>
+    <PostBuildEvent>
+      <Command>"$(AlaxInfo_Common)\..\Utilities\IncrementBuild\_Bin\IncrementBuild-$(PlatformName).exe" configuration "$(ProjectDir)Module.ini" binary "$(TargetPath)" string "ConfigurationName" "$(ConfigurationName)" 
+rem "$(WindowsSdkDir)bin\x64\signtool" sign /v /f "$(AlaxInfo_Common)\Certificate\PrivateSPC.pfx" /d "Alax.Info $(ProjectName) Module" /du http://alax.info /n "Roman Ryltsov" "$(TargetPath)"</Command>
+    </PostBuildEvent>
+    <PostBuildEvent>
+      <Message>Build Increment, Digital Signature</Message>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Configuration.cpp" />
@@ -467,6 +511,7 @@
     <None Include="..\..\Repository-Private\Utilities\EmailTools\_Bin\EmailTools-Win32.tlb" />
     <None Include="..\..\Repository-Private\Utilities\EmailTools\_Bin\Win32\Release\EmailTools\EmailTools.tlb" />
     <None Include="Module.def" />
+    <None Include="Module.ini" />
     <None Include="Module.rgs" />
     <None Include="GenericClass %28Both%29.rgs" />
     <None Include="GenericPropertyPage.rgs" />
