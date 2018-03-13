@@ -34,7 +34,7 @@ public:
 		AtlTraceSetDefaultSettings();
 		TraceModuleVersion();
 		_Z4_THIS();
-		_W(CExceptionFilter::Initialize());
+		//_W(CExceptionFilter::Initialize());
 	}
 	~CDirectShowSpyModule() throw()
 	{

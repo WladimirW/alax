@@ -21,6 +21,12 @@
 ////////////////////////////////////////////////////////////
 // CFilterGraphTableBase
 
+// NOTE: Exclude from legacy Windows XP toolset builds
+
+#if NTDDI_VERSION > 0x06010000 // NTDDI_WIN7
+
+#define AVAILABILITY_FILTERGRAPHTABLE
+
 class CFilterGraphTableBase
 {
 public:
@@ -772,3 +778,5 @@ public:
 };
 
 OBJECT_ENTRY_AUTO(__uuidof(FilterGraphTable), CFilterGraphTable)
+
+#endif // NTDDI_VERSION

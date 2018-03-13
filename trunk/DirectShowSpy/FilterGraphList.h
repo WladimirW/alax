@@ -249,18 +249,20 @@ public:
 		{
 			return ((CListPropertyPage*) nParameter)->SortGraphListViewItems(nItemParameter1, nItemParameter2);
 		}
-		static BOOL FindItem(CRoMapT<CStringW, CItem>& ItemMap, const CFilterGraphTable::CItem& TableItem)
-		{
-			for(auto&& MapItem: ItemMap.GetValues())
+		#if defined(AVAILABILITY_FILTERGRAPHTABLE)
+			static BOOL FindItem(CRoMapT<CStringW, CItem>& ItemMap, const CFilterGraphTable::CItem& TableItem)
 			{
-				if(MapItem.m_nProcessIdentifier != TableItem.m_nProcessIdentifier)
-					continue;
-				if(abs((LONG_PTR) MapItem.m_nInstance - (LONG_PTR) TableItem.m_nInstance) > 32) //if(MapItem.m_nInstance != TableItem.m_nInstance)
-					continue;
-				return TRUE;
+				for(auto&& MapItem: ItemMap.GetValues())
+				{
+					if(MapItem.m_nProcessIdentifier != TableItem.m_nProcessIdentifier)
+						continue;
+					if(abs((LONG_PTR) MapItem.m_nInstance - (LONG_PTR) TableItem.m_nInstance) > 32) //if(MapItem.m_nInstance != TableItem.m_nInstance)
+						continue;
+					return TRUE;
+				}
+				return FALSE;
 			}
-			return FALSE;
-		}
+		#endif // defined(AVAILABILITY_FILTERGRAPHTABLE)
 		static VOID EnumerateItems(IRunningObjectTable* pRunningObjectTable, CRoMapT<CStringW, CItem>& ItemMap, const LONG* pnProcessIdentifier = NULL)
 		{
 			_A(pRunningObjectTable);
@@ -308,36 +310,38 @@ public:
 					}
 				}
 				#pragma region Filter Graph Table
-				_ATLTRY
-				{
-					CLocalObjectPtr<CFilterGraphTable> pFilterGraphTable;
-					CFilterGraphTable::CItemArray ItemArray;
-					if(pFilterGraphTable->GetItems(ItemArray))
+				#if defined(AVAILABILITY_FILTERGRAPHTABLE)
+					_ATLTRY
 					{
-						for(auto&& TableItem: ItemArray)
+						CLocalObjectPtr<CFilterGraphTable> pFilterGraphTable;
+						CFilterGraphTable::CItemArray ItemArray;
+						if(pFilterGraphTable->GetItems(ItemArray))
 						{
-							if(FindItem(ItemMap, TableItem))
-								continue;
-							if(pnProcessIdentifier && TableItem.m_nProcessIdentifier != (DWORD) *pnProcessIdentifier)
-								continue; // Skip
-							const CStringW sDisplayName = AtlFormatStringW(L"!FilterGraph %p pid %08x; FGT", TableItem.m_nInstance, TableItem.m_nProcessIdentifier);
-							CItem Item;
-							Item.m_sDisplayName = sDisplayName;
-							Item.m_nInstance = TableItem.m_nInstance;
-							Item.m_nProcessIdentifier = TableItem.m_nProcessIdentifier;
-							Item.m_pFilterGraphUnknown = TableItem.m_pFilterGraph;
-							Item.m_pFilterGraph = TableItem.m_pFilterGraph;
-							SYSTEMTIME Time;
-							_W(FileTimeToSystemTime(&reinterpret_cast<const FILETIME&>(TableItem.m_nTime), &Time));
-							Item.m_sTime = AtlFormatString(_T("%02d:%02d:%02d"), Time.wHour, Time.wMinute, Time.wSecond);
-							_W(ItemMap.SetAt(sDisplayName, Item) >= 0);
+							for(auto&& TableItem: ItemArray)
+							{
+								if(FindItem(ItemMap, TableItem))
+									continue;
+								if(pnProcessIdentifier && TableItem.m_nProcessIdentifier != (DWORD) *pnProcessIdentifier)
+									continue; // Skip
+								const CStringW sDisplayName = AtlFormatStringW(L"!FilterGraph %p pid %08x; FGT", TableItem.m_nInstance, TableItem.m_nProcessIdentifier);
+								CItem Item;
+								Item.m_sDisplayName = sDisplayName;
+								Item.m_nInstance = TableItem.m_nInstance;
+								Item.m_nProcessIdentifier = TableItem.m_nProcessIdentifier;
+								Item.m_pFilterGraphUnknown = TableItem.m_pFilterGraph;
+								Item.m_pFilterGraph = TableItem.m_pFilterGraph;
+								SYSTEMTIME Time;
+								_W(FileTimeToSystemTime(&reinterpret_cast<const FILETIME&>(TableItem.m_nTime), &Time));
+								Item.m_sTime = AtlFormatString(_T("%02d:%02d:%02d"), Time.wHour, Time.wMinute, Time.wSecond);
+								_W(ItemMap.SetAt(sDisplayName, Item) >= 0);
+							}
 						}
 					}
-				}
-				_ATLCATCHALL()
-				{
-					_Z_EXCEPTION();
-				}
+					_ATLCATCHALL()
+					{
+						_Z_EXCEPTION();
+					}
+				#endif // defined(AVAILABILITY_FILTERGRAPHTABLE)
 				#pragma endregion 
 			}
 			_ATLCATCHALL()
