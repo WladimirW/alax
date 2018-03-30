@@ -638,6 +638,88 @@ private:
 	CComPtr<IUnknown> m_pSite;
 	CStringW m_sFriendlyName;
 
+	static VOID TraceProcessPerformance(LPCTSTR pszDescription = NULL, BOOL bForce = FALSE)
+	{
+		pszDescription;
+		#if _DEVELOPMENT || _TRACE
+			const ULONG nTime = GetTickCount();
+			MEMORYSTATUSEX MemoryStatus = { sizeof MemoryStatus };
+			const BOOL bGlobalMemoryStatusExResult = GlobalMemoryStatusEx(&MemoryStatus);
+			PROCESS_MEMORY_COUNTERS_EX Counters = { sizeof Counters };
+			const BOOL bGetProcessMemoryInfoResult = GetProcessMemoryInfo(GetCurrentProcess(), (PROCESS_MEMORY_COUNTERS*) &Counters, sizeof Counters);
+			_A(bGlobalMemoryStatusExResult && bGetProcessMemoryInfoResult);
+			BOOL bReportGlobalMemoryStatusEx = FALSE, bReportGetProcessMemoryInfo = FALSE;
+			#pragma region Reduce Similar Traces
+			{
+				_A(_pAtlModule);
+				CComCritSecLock<CComCriticalSection> Lock(_pAtlModule->m_csStaticDataInitAndTypeInfo);
+				static ULONG g_nReportTime = 0;
+				static MEMORYSTATUSEX g_MemoryStatus;
+				static PROCESS_MEMORY_COUNTERS_EX g_Counters;
+				#if !defined(_DEBUG)
+					if(bForce || !g_nReportTime || nTime - g_nReportTime >= 15 * 1000) // 15 seconds
+					{
+						bReportGlobalMemoryStatusEx = bGlobalMemoryStatusExResult;
+						bReportGetProcessMemoryInfo = bGetProcessMemoryInfoResult;
+					} else
+					{
+						#pragma region MEMORYSTATUSEX
+						if(fabs(((DOUBLE) MemoryStatus.dwMemoryLoad - g_MemoryStatus.dwMemoryLoad) / ((MemoryStatus.dwMemoryLoad + g_MemoryStatus.dwMemoryLoad) / 2)) > 0.05) // 5%
+							bReportGlobalMemoryStatusEx = TRUE;
+						else
+						if(fabs(((DOUBLE) MemoryStatus.ullAvailVirtual - g_MemoryStatus.ullAvailVirtual) / ((MemoryStatus.ullAvailVirtual + g_MemoryStatus.ullAvailVirtual) / 2)) > 0.05) // 5%
+							bReportGlobalMemoryStatusEx = TRUE;
+						#pragma endregion 
+						#pragma region PROCESS_MEMORY_COUNTERS_EX
+						if(fabs(((DOUBLE) Counters.WorkingSetSize - g_Counters.WorkingSetSize) / ((Counters.WorkingSetSize + g_Counters.WorkingSetSize) / 2)) > 0.05) // 5%
+							bReportGetProcessMemoryInfo = TRUE;
+						else 
+						if(fabs(((DOUBLE) Counters.PrivateUsage - g_Counters.PrivateUsage) / ((Counters.PrivateUsage + g_Counters.PrivateUsage) / 2)) > 0.05) // 5%
+							bReportGetProcessMemoryInfo = TRUE;
+						#pragma endregion 
+					}
+				#else
+					bReportGlobalMemoryStatusEx = bGlobalMemoryStatusExResult;
+					bReportGetProcessMemoryInfo = bGetProcessMemoryInfoResult;
+				#endif // !defined(_DEBUG)
+				if(bReportGlobalMemoryStatusEx)
+					g_MemoryStatus = MemoryStatus;
+				if(bReportGetProcessMemoryInfo)
+					g_Counters = Counters;
+				if(bReportGlobalMemoryStatusEx || bReportGetProcessMemoryInfo)
+					g_nReportTime = nTime;
+			}
+			#pragma endregion 
+			CString sDescription = pszDescription;
+			if(!sDescription.IsEmpty())
+				sDescription.Append(_T(": "));
+			if(bReportGlobalMemoryStatusEx)
+			{
+				_Z2(atlTraceGeneral, 2, _T("%s") _T("Memory Status, ") 
+					_T("dwMemoryLoad %d") _T(", ")
+					_T("ullTotalVirtual %s MB") _T(", ")
+					_T("ullAvailVirtual %s MB (in use %s MB)") //_T(", ")
+					_T("\n"), 
+					sDescription,
+					MemoryStatus.dwMemoryLoad,
+					_StringHelper::FormatNumber((LONGLONG) MemoryStatus.ullTotalVirtual >> 20),
+					_StringHelper::FormatNumber((LONGLONG) MemoryStatus.ullAvailVirtual >> 20), _StringHelper::FormatNumber((LONGLONG) (MemoryStatus.ullTotalVirtual - MemoryStatus.ullAvailVirtual) >> 20),
+					0);
+			}
+			if(bReportGetProcessMemoryInfo)
+			{
+				_Z2(atlTraceGeneral, 2, _T("%s") _T("Process Performance, ") 
+					_T("WorkingSetSize %s MB (peak %s MB)") _T(", ")
+					_T("PrivateUsage %s MB") //_T(", ")
+					_T("\n"), 
+					sDescription,
+					_StringHelper::FormatNumber((LONGLONG) Counters.WorkingSetSize >> 20), _StringHelper::FormatNumber((LONGLONG) Counters.PeakWorkingSetSize >> 20),
+					_StringHelper::FormatNumber((LONGLONG) Counters.PrivateUsage >> 20), 
+					0);
+			}
+		#endif // _DEVELOPMENT || _TRACE
+	}
+
 	BOOL IsAggregated() const
 	{
 		return (ULONG) m_dwRef >= 0x00001000;
@@ -1166,6 +1248,23 @@ public:
 		}
 		return S_OK;
 	}
+	STDMETHOD(CreateFilterGraphHelper)(IFilterGraphHelper** ppFilterGraphHelper) override
+	{
+		_Z4(atlTraceCOM, 4, _T("this 0x%p\n"), this);
+		_ATLTRY
+		{
+			__D(ppFilterGraphHelper, E_POINTER);
+			*ppFilterGraphHelper = NULL;
+			CObjectPtr<CFilterGraphHelper> pFilterGraphHelper;
+			pFilterGraphHelper.Construct()->SetFilterGraph(this);
+			*ppFilterGraphHelper = pFilterGraphHelper.Detach();
+		}
+		_ATLCATCHALL()
+		{
+			_Z_EXCEPTION();
+		}
+		return S_OK;
+	}
 
 // ISpyEx
 
@@ -1401,8 +1500,10 @@ public:
 		HOOK_PROLOG(CFilterGraphStateControlHookHost)
 			OnRun(pT, &bDefault);
 		HOOK_EPILOG()
+		TraceProcessPerformance(_T("Before IMediaControl::Run"));
 		const HRESULT nRunResult = m_pInnerMediaControl->Run();
 		_Z4_DSHRESULT(nRunResult);
+		TraceProcessPerformance(_T("After IMediaControl::Run"));
 		return nRunResult;
 	}
 	STDMETHOD(Pause)() override
@@ -1421,7 +1522,11 @@ public:
 		HOOK_PROLOG(CFilterGraphStateControlHookHost)
 			OnPause(pT, &bDefault);
 		HOOK_EPILOG()
-		return m_pInnerMediaControl->Pause();
+		TraceProcessPerformance(_T("Before IMediaControl::Pause"));
+		const HRESULT nPauseResult = m_pInnerMediaControl->Pause();
+		_Z4_DSHRESULT(nPauseResult);
+		TraceProcessPerformance(_T("After IMediaControl::Pause"));
+		return nPauseResult;
 	}
 	STDMETHOD(Stop)() override
 	{
@@ -1429,7 +1534,11 @@ public:
 		HOOK_PROLOG(CFilterGraphStateControlHookHost)
 			OnStop(pT, &bDefault);
 		HOOK_EPILOG()
-		return m_pInnerMediaControl->Stop();
+		TraceProcessPerformance(_T("Before IMediaControl::Stop"));
+		const HRESULT nStopResult = m_pInnerMediaControl->Stop();
+		_Z4_DSHRESULT(nStopResult);
+		TraceProcessPerformance(_T("After IMediaControl::Stop"));
+		return nStopResult;
 	}
 	STDMETHOD(GetState)(LONG nTimeout, OAFilterState* pState) override
 	{
@@ -1515,6 +1624,7 @@ public:
 		{
 			if(nEventCode == EC_ERRORABORTEX && nParameter2)
 				_Z4(atlTraceGeneral, 4, _T("nParameter2 \"%s\"\n"), CString((BSTR) nParameter2));
+			TraceProcessPerformance(_FilterGraphHelper::FormatEventCode(nEventCode), TRUE);
 			static CConstIntegerRegistryValue g_nErrorAbortMiniDumpMode(_T("ErrorAbort MiniDump Mode")); // 0 Default (=1), 1 Disabled, 2 Enabled
 			if((DWORD) g_nErrorAbortMiniDumpMode == 2) // Enabled
 			{
