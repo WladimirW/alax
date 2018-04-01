@@ -3078,27 +3078,30 @@ public:
 		{
 			sText += AtlFormatString(_T(" * ") _T("As `VIDEOINFOHEADER`:") _T("\r\n"));
 			const VIDEOINFOHEADER* pVideoInfoHeader = (const VIDEOINFOHEADER*) pMediaType->pbFormat;
-			#define J(x) I(pVideoInfoHeader->x)
-			#define K1(x) sText += AtlFormatString(_T("  * `") _T(#x) _T("`: %s") _T("\r\n"), J(x))
-			sText += AtlFormatString(_T("  * ") _T("`rcSource`: (%s, %s) - (%s, %s)") _T("\r\n"), J(rcSource.left), J(rcSource.top), J(rcSource.right), J(rcSource.bottom));
-			sText += AtlFormatString(_T("  * ") _T("`rcTarget`: (%s, %s) - (%s, %s)") _T("\r\n"), J(rcTarget.left), J(rcTarget.top), J(rcTarget.right), J(rcTarget.bottom));
-			K1(dwBitRate);
-			K1(dwBitErrorRate);
-			sText += AtlFormatString(_T("  * ") _T("`AvgTimePerFrame`: %s units") _T("\r\n"), I(_FilterGraphHelper::FormatReferenceTime(pVideoInfoHeader->AvgTimePerFrame)));
-			K1(bmiHeader.biSize);
-			K1(bmiHeader.biWidth);
-			K1(bmiHeader.biHeight);
-			K1(bmiHeader.biPlanes);
-			K1(bmiHeader.biBitCount);
-			sText += AtlFormatString(_T("  * ") _T("`bmiHeader.biCompression`: %s") _T("\r\n"), I(_FilterGraphHelper::GetFourccCodeString(pVideoInfoHeader->bmiHeader.biCompression)));
-			K1(bmiHeader.biSizeImage);
-			K1(bmiHeader.biXPelsPerMeter);
-			K1(bmiHeader.biYPelsPerMeter);
-			K1(bmiHeader.biClrUsed);
-			K1(bmiHeader.biClrImportant);
-			#undef J
-			#undef K1
-			nExtraDataSize = pMediaType->cbFormat - sizeof *pVideoInfoHeader;
+			if(pVideoInfoHeader && pMediaType->cbFormat >= sizeof *pVideoInfoHeader)
+			{
+				#define J(x) I(pVideoInfoHeader->x)
+				#define K1(x) sText += AtlFormatString(_T("  * `") _T(#x) _T("`: %s") _T("\r\n"), J(x))
+				sText += AtlFormatString(_T("  * ") _T("`rcSource`: (%s, %s) - (%s, %s)") _T("\r\n"), J(rcSource.left), J(rcSource.top), J(rcSource.right), J(rcSource.bottom));
+				sText += AtlFormatString(_T("  * ") _T("`rcTarget`: (%s, %s) - (%s, %s)") _T("\r\n"), J(rcTarget.left), J(rcTarget.top), J(rcTarget.right), J(rcTarget.bottom));
+				K1(dwBitRate);
+				K1(dwBitErrorRate);
+				sText += AtlFormatString(_T("  * ") _T("`AvgTimePerFrame`: %s units") _T("\r\n"), I(_FilterGraphHelper::FormatReferenceTime(pVideoInfoHeader->AvgTimePerFrame)));
+				K1(bmiHeader.biSize);
+				K1(bmiHeader.biWidth);
+				K1(bmiHeader.biHeight);
+				K1(bmiHeader.biPlanes);
+				K1(bmiHeader.biBitCount);
+				sText += AtlFormatString(_T("  * ") _T("`bmiHeader.biCompression`: %s") _T("\r\n"), I(_FilterGraphHelper::GetFourccCodeString(pVideoInfoHeader->bmiHeader.biCompression)));
+				K1(bmiHeader.biSizeImage);
+				K1(bmiHeader.biXPelsPerMeter);
+				K1(bmiHeader.biYPelsPerMeter);
+				K1(bmiHeader.biClrUsed);
+				K1(bmiHeader.biClrImportant);
+				#undef J
+				#undef K1
+				nExtraDataSize = pMediaType->cbFormat - sizeof *pVideoInfoHeader;
+			}
 		} else
 		#pragma endregion 
 		#pragma region FORMAT_VideoInfo2
@@ -3106,38 +3109,41 @@ public:
 		{
 			sText += AtlFormatString(_T(" * ") _T("As `VIDEOINFOHEADER2`:") _T("\r\n"));
 			const VIDEOINFOHEADER2* pVideoInfoHeader2 = (const VIDEOINFOHEADER2*) pMediaType->pbFormat;
-			#define J(x) I(pVideoInfoHeader2->x)
-			#define K1(x) sText += AtlFormatString(_T("  * `") _T(#x) _T("`: %s") _T("\r\n"), J(x))
-			#define K2(x, y) sText += AtlFormatString(_T("  * `") _T(#x) _T("`: %s") _T("\r\n"), I(pVideoInfoHeader2->x, y))
-			sText += AtlFormatString(_T("  * ") _T("rcSource: (%s, %s) - (%s, %s)") _T("\r\n"), J(rcSource.left), J(rcSource.top), J(rcSource.right), J(rcSource.bottom));
-			sText += AtlFormatString(_T("  * ") _T("rcTarget: (%s, %s) - (%s, %s)") _T("\r\n"), J(rcTarget.left), J(rcTarget.top), J(rcTarget.right), J(rcTarget.bottom));
-			K1(dwBitRate);
-			K1(dwBitErrorRate);
-			sText += AtlFormatString(_T("  * ") _T("`AvgTimePerFrame`: %s units") _T("\r\n"), I(_FilterGraphHelper::FormatReferenceTime(pVideoInfoHeader2->AvgTimePerFrame)));
-			K2(dwInterlaceFlags, _T("0x%X"));
-			K2(dwCopyProtectFlags, _T("0x%X"));
-			K1(dwPictAspectRatioX);
-			K1(dwPictAspectRatioY);
-			K2(dwControlFlags, _T("0x%X"));
-			K1(bmiHeader.biSize);
-			K1(bmiHeader.biWidth);
-			K1(bmiHeader.biHeight);
-			K1(bmiHeader.biPlanes);
-			K1(bmiHeader.biBitCount);
-			sText += AtlFormatString(_T("  * ") _T("`bmiHeader.biCompression`: %s") _T("\r\n"), I(_FilterGraphHelper::GetFourccCodeString(pVideoInfoHeader2->bmiHeader.biCompression)));
-			K1(bmiHeader.biSizeImage);
-			K1(bmiHeader.biXPelsPerMeter);
-			K1(bmiHeader.biYPelsPerMeter);
-			K1(bmiHeader.biClrUsed);
-			K1(bmiHeader.biClrImportant);
-			#undef J
-			#undef K1
-			#undef K2
-			nExtraDataSize = pMediaType->cbFormat - sizeof *pVideoInfoHeader2;
-			if(nExtraDataSize)
+			if(pVideoInfoHeader2 && pMediaType->cbFormat >= sizeof *pVideoInfoHeader2)
 			{
-				sText += AtlFormatString(_T("  * ") _T("Extra Data: (%d bytes)") _T("\r\n"), nExtraDataSize);
-				nExtraDataSize = 0;
+				#define J(x) I(pVideoInfoHeader2->x)
+				#define K1(x) sText += AtlFormatString(_T("  * `") _T(#x) _T("`: %s") _T("\r\n"), J(x))
+				#define K2(x, y) sText += AtlFormatString(_T("  * `") _T(#x) _T("`: %s") _T("\r\n"), I(pVideoInfoHeader2->x, y))
+				sText += AtlFormatString(_T("  * ") _T("rcSource: (%s, %s) - (%s, %s)") _T("\r\n"), J(rcSource.left), J(rcSource.top), J(rcSource.right), J(rcSource.bottom));
+				sText += AtlFormatString(_T("  * ") _T("rcTarget: (%s, %s) - (%s, %s)") _T("\r\n"), J(rcTarget.left), J(rcTarget.top), J(rcTarget.right), J(rcTarget.bottom));
+				K1(dwBitRate);
+				K1(dwBitErrorRate);
+				sText += AtlFormatString(_T("  * ") _T("`AvgTimePerFrame`: %s units") _T("\r\n"), I(_FilterGraphHelper::FormatReferenceTime(pVideoInfoHeader2->AvgTimePerFrame)));
+				K2(dwInterlaceFlags, _T("0x%X"));
+				K2(dwCopyProtectFlags, _T("0x%X"));
+				K1(dwPictAspectRatioX);
+				K1(dwPictAspectRatioY);
+				K2(dwControlFlags, _T("0x%X"));
+				K1(bmiHeader.biSize);
+				K1(bmiHeader.biWidth);
+				K1(bmiHeader.biHeight);
+				K1(bmiHeader.biPlanes);
+				K1(bmiHeader.biBitCount);
+				sText += AtlFormatString(_T("  * ") _T("`bmiHeader.biCompression`: %s") _T("\r\n"), I(_FilterGraphHelper::GetFourccCodeString(pVideoInfoHeader2->bmiHeader.biCompression)));
+				K1(bmiHeader.biSizeImage);
+				K1(bmiHeader.biXPelsPerMeter);
+				K1(bmiHeader.biYPelsPerMeter);
+				K1(bmiHeader.biClrUsed);
+				K1(bmiHeader.biClrImportant);
+				#undef J
+				#undef K1
+				#undef K2
+				nExtraDataSize = pMediaType->cbFormat - sizeof *pVideoInfoHeader2;
+				if(nExtraDataSize)
+				{
+					sText += AtlFormatString(_T("  * ") _T("Extra Data: (%d bytes)") _T("\r\n"), nExtraDataSize);
+					nExtraDataSize = 0;
+				}
 			}
 		} else
 		#pragma endregion 
@@ -3146,83 +3152,91 @@ public:
 		{
 			sText += AtlFormatString(_T(" * ") _T("As `MPEG2VIDEOINFO`:") _T("\r\n"));
 			const MPEG2VIDEOINFO* pMpeg2VideoInfo = (const MPEG2VIDEOINFO*) pMediaType->pbFormat;
-			#define J(x) I(pMpeg2VideoInfo->x)
-			#define K1(x) sText += AtlFormatString(_T("  * `") _T(#x) _T("`: %s") _T("\r\n"), J(x))
-			#define K2(x, y) sText += AtlFormatString(_T("  * `") _T(#x) _T("`: %s") _T("\r\n"), I(pMpeg2VideoInfo->x, y))
-			sText += AtlFormatString(_T("  * ") _T("`hdr.rcSource`: (%s, %s) - (%s, %s)") _T("\r\n"), J(hdr.rcSource.left), J(hdr.rcSource.top), J(hdr.rcSource.right), J(hdr.rcSource.bottom));
-			sText += AtlFormatString(_T("  * ") _T("`hdr.rcTarget`: (%s, %s) - (%s, %s)") _T("\r\n"), J(hdr.rcTarget.left), J(hdr.rcTarget.top), J(hdr.rcTarget.right), J(hdr.rcTarget.bottom));
-			K1(hdr.dwBitRate);
-			K1(hdr.dwBitErrorRate);
-			sText += AtlFormatString(_T("  * ") _T("`hdr.AvgTimePerFrame`: %s") _T("\r\n"), I(_FilterGraphHelper::FormatReferenceTime(pMpeg2VideoInfo->hdr.AvgTimePerFrame)));
-			K2(hdr.dwInterlaceFlags, _T("0x%X"));
-			K2(hdr.dwCopyProtectFlags, _T("0x%X"));
-			K1(hdr.dwPictAspectRatioX);
-			K1(hdr.dwPictAspectRatioY);
-			K2(hdr.dwControlFlags, _T("0x%X"));
-			K1(hdr.bmiHeader.biSize);
-			K1(hdr.bmiHeader.biWidth);
-			K1(hdr.bmiHeader.biHeight);
-			K1(hdr.bmiHeader.biPlanes);
-			K1(hdr.bmiHeader.biBitCount);
-			sText += AtlFormatString(_T("  * ") _T("`hdr.bmiHeader.biCompression`: %s") _T("\r\n"), I(_FilterGraphHelper::GetFourccCodeString(pMpeg2VideoInfo->hdr.bmiHeader.biCompression)));
-			K1(hdr.bmiHeader.biSizeImage);
-			K1(hdr.bmiHeader.biXPelsPerMeter);
-			K1(hdr.bmiHeader.biYPelsPerMeter);
-			K1(hdr.bmiHeader.biClrUsed);
-			K1(hdr.bmiHeader.biClrImportant);
-			K2(dwStartTimeCode, _T("0x%08X"));
-			K1(cbSequenceHeader);
-			K1(dwProfile);
-			K1(dwLevel);
-			K2(dwFlags, _T("0x%08X"));
-			#undef J
-			#undef K1
-			#undef K2
-			#undef J
-			nExtraDataSize = pMediaType->cbFormat - (sizeof *pMpeg2VideoInfo - sizeof pMpeg2VideoInfo->dwSequenceHeader);
+			if(pMpeg2VideoInfo && pMediaType->cbFormat >= offsetof(MPEG2VIDEOINFO, dwSequenceHeader)) //sizeof *pMpeg2VideoInfo)
+			{
+				#define J(x) I(pMpeg2VideoInfo->x)
+				#define K1(x) sText += AtlFormatString(_T("  * `") _T(#x) _T("`: %s") _T("\r\n"), J(x))
+				#define K2(x, y) sText += AtlFormatString(_T("  * `") _T(#x) _T("`: %s") _T("\r\n"), I(pMpeg2VideoInfo->x, y))
+				sText += AtlFormatString(_T("  * ") _T("`hdr.rcSource`: (%s, %s) - (%s, %s)") _T("\r\n"), J(hdr.rcSource.left), J(hdr.rcSource.top), J(hdr.rcSource.right), J(hdr.rcSource.bottom));
+				sText += AtlFormatString(_T("  * ") _T("`hdr.rcTarget`: (%s, %s) - (%s, %s)") _T("\r\n"), J(hdr.rcTarget.left), J(hdr.rcTarget.top), J(hdr.rcTarget.right), J(hdr.rcTarget.bottom));
+				K1(hdr.dwBitRate);
+				K1(hdr.dwBitErrorRate);
+				sText += AtlFormatString(_T("  * ") _T("`hdr.AvgTimePerFrame`: %s") _T("\r\n"), I(_FilterGraphHelper::FormatReferenceTime(pMpeg2VideoInfo->hdr.AvgTimePerFrame)));
+				K2(hdr.dwInterlaceFlags, _T("0x%X"));
+				K2(hdr.dwCopyProtectFlags, _T("0x%X"));
+				K1(hdr.dwPictAspectRatioX);
+				K1(hdr.dwPictAspectRatioY);
+				K2(hdr.dwControlFlags, _T("0x%X"));
+				K1(hdr.bmiHeader.biSize);
+				K1(hdr.bmiHeader.biWidth);
+				K1(hdr.bmiHeader.biHeight);
+				K1(hdr.bmiHeader.biPlanes);
+				K1(hdr.bmiHeader.biBitCount);
+				sText += AtlFormatString(_T("  * ") _T("`hdr.bmiHeader.biCompression`: %s") _T("\r\n"), I(_FilterGraphHelper::GetFourccCodeString(pMpeg2VideoInfo->hdr.bmiHeader.biCompression)));
+				K1(hdr.bmiHeader.biSizeImage);
+				K1(hdr.bmiHeader.biXPelsPerMeter);
+				K1(hdr.bmiHeader.biYPelsPerMeter);
+				K1(hdr.bmiHeader.biClrUsed);
+				K1(hdr.bmiHeader.biClrImportant);
+				K2(dwStartTimeCode, _T("0x%08X"));
+				K1(cbSequenceHeader);
+				K1(dwProfile);
+				K1(dwLevel);
+				K2(dwFlags, _T("0x%08X"));
+				#undef J
+				#undef K1
+				#undef K2
+				#undef J
+				nExtraDataSize = pMediaType->cbFormat - (offsetof(MPEG2VIDEOINFO, dwSequenceHeader) //sizeof *pMpeg2VideoInfo 
+					- sizeof pMpeg2VideoInfo->dwSequenceHeader);
+			}
 		} else
 		#pragma endregion 
 		#pragma region FORMAT_WaveFormatEx
 		if(pMediaType->formattype == FORMAT_WaveFormatEx)
 		{
 			const WAVEFORMATEX* pWaveFormatEx = (const WAVEFORMATEX*) pMediaType->pbFormat;
-			if(pWaveFormatEx->wFormatTag == WAVE_FORMAT_EXTENSIBLE)
+			if(pWaveFormatEx && pMediaType->cbFormat >= sizeof *pWaveFormatEx)
 			{
-				const WAVEFORMATEXTENSIBLE* pWaveFormatExtensible = (const WAVEFORMATEXTENSIBLE*) pMediaType->pbFormat;
-				#define J(x) I(pWaveFormatExtensible->x)
-				#define K1(x) sText += AtlFormatString(_T("  * `") _T(#x) _T("`: %s") _T("\r\n"), J(x))
-				#define K2(x, y) sText += AtlFormatString(_T("  * `") _T(#x) _T("`: %s") _T("\r\n"), I(pWaveFormatExtensible->x, y))
-				sText += AtlFormatString(_T(" * ") _T("As `WAVEFORMATEXTENSIBLE`:") _T("\r\n"));
-				K2(Format.wFormatTag, _T("0x%02X"));
-				K1(Format.nChannels);
-				K1(Format.nSamplesPerSec);
-				K1(Format.nAvgBytesPerSec);
-				K1(Format.nBlockAlign);
-				K1(Format.wBitsPerSample);
-				K1(Format.cbSize);
-				K1(Samples.wValidBitsPerSample);
-				K2(dwChannelMask, _T("0x%02X"));
-				sText += AtlFormatString(_T("  * ") _T("`SubFormat`: %s") _T("\r\n"), I(_PersistHelper::StringFromIdentifier(pWaveFormatExtensible->SubFormat)));
-				#undef J
-				#undef K1
-				#undef K2
-				nExtraDataSize = pWaveFormatEx->cbSize - (sizeof *pWaveFormatExtensible - sizeof *pWaveFormatEx);
-			} else
-			{
-				#define J(x) I(pWaveFormatEx->x)
-				#define K1(x) sText += AtlFormatString(_T("  * `") _T(#x) _T("`: %s") _T("\r\n"), J(x))
-				#define K2(x, y) sText += AtlFormatString(_T("  * `") _T(#x) _T("`: %s") _T("\r\n"), I(pWaveFormatEx->x, y))
-				K2(wFormatTag, _T("0x%02X"));
-				K1(nChannels);
-				K1(nSamplesPerSec);
-				K1(nAvgBytesPerSec);
-				K1(nBlockAlign);
-				K1(wBitsPerSample);
-				K1(cbSize);
-				#undef J
-				#undef K1
-				#undef K2
-				nExtraDataSize = pWaveFormatEx->cbSize;
+				if(pWaveFormatEx->wFormatTag == WAVE_FORMAT_EXTENSIBLE)
+				{
+					// WARN: Check pMediaType->cbFormat
+					const WAVEFORMATEXTENSIBLE* pWaveFormatExtensible = (const WAVEFORMATEXTENSIBLE*) pMediaType->pbFormat;
+					#define J(x) I(pWaveFormatExtensible->x)
+					#define K1(x) sText += AtlFormatString(_T("  * `") _T(#x) _T("`: %s") _T("\r\n"), J(x))
+					#define K2(x, y) sText += AtlFormatString(_T("  * `") _T(#x) _T("`: %s") _T("\r\n"), I(pWaveFormatExtensible->x, y))
+					sText += AtlFormatString(_T(" * ") _T("As `WAVEFORMATEXTENSIBLE`:") _T("\r\n"));
+					K2(Format.wFormatTag, _T("0x%02X"));
+					K1(Format.nChannels);
+					K1(Format.nSamplesPerSec);
+					K1(Format.nAvgBytesPerSec);
+					K1(Format.nBlockAlign);
+					K1(Format.wBitsPerSample);
+					K1(Format.cbSize);
+					K1(Samples.wValidBitsPerSample);
+					K2(dwChannelMask, _T("0x%02X"));
+					sText += AtlFormatString(_T("  * ") _T("`SubFormat`: %s") _T("\r\n"), I(_PersistHelper::StringFromIdentifier(pWaveFormatExtensible->SubFormat)));
+					#undef J
+					#undef K1
+					#undef K2
+					nExtraDataSize = pWaveFormatEx->cbSize - (sizeof *pWaveFormatExtensible - sizeof *pWaveFormatEx);
+				} else
+				{
+					#define J(x) I(pWaveFormatEx->x)
+					#define K1(x) sText += AtlFormatString(_T("  * `") _T(#x) _T("`: %s") _T("\r\n"), J(x))
+					#define K2(x, y) sText += AtlFormatString(_T("  * `") _T(#x) _T("`: %s") _T("\r\n"), I(pWaveFormatEx->x, y))
+					K2(wFormatTag, _T("0x%02X"));
+					K1(nChannels);
+					K1(nSamplesPerSec);
+					K1(nAvgBytesPerSec);
+					K1(nBlockAlign);
+					K1(wBitsPerSample);
+					K1(cbSize);
+					#undef J
+					#undef K1
+					#undef K2
+					nExtraDataSize = pWaveFormatEx->cbSize;
+				}
 			}
 		}
 		#pragma endregion 
